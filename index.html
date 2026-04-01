@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doron Tools | כלים פיננסיים ויין</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #f5f7fa;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-hover: #f0f2f5;
+    --bg-active: #e8edf4;
+    --accent-finance: #0a9b76;
+    --accent-wine: #b71c5a;
+    --accent-market: #2d6fba;
+    --text-primary: #1a2332;
+    --text-secondary: #5a6a80;
+    --text-muted: #8d99a8;
+    --border: #e2e6ed;
+    --sidebar-width: 280px;
+    --topbar-height: 0px;
+    --glow-finance: rgba(10, 155, 118, 0.1);
+    --glow-wine: rgba(183, 28, 90, 0.1);
+    --glow-market: rgba(45, 111, 186, 0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
+    transition: transform 0.3s ease;
+    box-shadow: -2px 0 12px rgba(0,0,0,0.04);
+  }
+
+  .sidebar-header {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .logo-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent-finance), var(--accent-market));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: 'Rubik', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent-finance), var(--accent-market));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 400;
+    padding-right: 54px;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 12px;
+  }
+
+  .nav-category {
+    margin-bottom: 24px;
+  }
+
+  .nav-category-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 0 10px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-category-label .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 2px;
+    position: relative;
+    text-decoration: none;
+    color: var(--text-secondary);
+  }
+
+  .nav-item:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .nav-item.active {
+    background: var(--bg-active);
+    color: var(--text-primary);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 24px;
+    border-radius: 2px;
+  }
+
+  .nav-item.active[data-category="finance"]::before { background: var(--accent-finance); }
+  .nav-item.active[data-category="wine"]::before { background: var(--accent-wine); }
+  .nav-item.active[data-category="market"]::before { background: var(--accent-market); }
+
+  .nav-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  [data-category="finance"] .nav-icon { background: var(--glow-finance); }
+  [data-category="wine"] .nav-icon { background: var(--glow-wine); }
+  [data-category="market"] .nav-icon { background: var(--glow-market); }
+
+  .nav-item.active[data-category="finance"] .nav-icon { background: var(--accent-finance); color: #fff; }
+  .nav-item.active[data-category="wine"] .nav-icon { background: var(--accent-wine); color: #fff; }
+  .nav-item.active[data-category="market"] .nav-icon { background: var(--accent-market); color: #fff; }
+
+  .nav-label {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .nav-badge {
+    margin-right: auto;
+    margin-left: 0;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    font-weight: 600;
+    background: var(--bg-hover);
+    color: var(--text-muted);
+  }
+
+  /* ── Sidebar Footer ── */
+  .sidebar-footer {
+    padding: 16px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  .sidebar-footer a {
+    color: var(--accent-finance);
+    text-decoration: none;
+  }
+
+  /* ── Main Content ── */
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── Welcome Screen ── */
+  .welcome-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    text-align: center;
+    animation: fadeIn 0.6s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .welcome-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, var(--accent-finance), var(--accent-market));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    margin-bottom: 24px;
+    box-shadow: 0 12px 40px rgba(10, 155, 118, 0.2);
+  }
+
+  .welcome-title {
+    font-family: 'Rubik', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .welcome-desc {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 500px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .quick-launch {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    max-width: 720px;
+    width: 100%;
+  }
+
+  .quick-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .quick-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-finance);
+    box-shadow: 0 8px 30px rgba(10, 155, 118, 0.12);
+  }
+
+  .quick-card[data-cat="wine"]:hover {
+    border-color: var(--accent-wine);
+    box-shadow: 0 8px 30px rgba(183, 28, 90, 0.12);
+  }
+
+  .quick-card[data-cat="market"]:hover {
+    border-color: var(--accent-market);
+    box-shadow: 0 8px 30px rgba(45, 111, 186, 0.12);
+  }
+
+  .quick-card-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .quick-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .quick-card-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── Tool Frame ── */
+  .tool-frame-wrapper {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    animation: slideIn 0.35s ease;
+  }
+
+  .tool-frame-wrapper.active {
+    display: flex;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .tool-topbar {
+    height: 52px;
+    min-height: 52px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 12px;
+  }
+
+  .tool-topbar-icon {
+    font-size: 20px;
+  }
+
+  .tool-topbar-title {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .tool-topbar-url {
+    margin-right: auto;
+    font-size: 12px;
+    color: var(--text-muted);
+    direction: ltr;
+    font-family: 'Rubik', monospace;
+  }
+
+  .tool-topbar-actions {
+    display: flex;
+    gap: 8px;
+    margin-right: auto;
+  }
+
+  .topbar-btn {
+    background: var(--bg-hover);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Heebo', sans-serif;
+    transition: all 0.2s ease;
+  }
+
+  .topbar-btn:hover {
+    background: var(--bg-active);
+    color: var(--text-primary);
+  }
+
+  .tool-iframe {
+    flex: 1;
+    border: none;
+    width: 100%;
+    background: #fff;
+  }
+
+  .placeholder-frame {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: var(--text-muted);
+  }
+
+  .placeholder-frame .icon { font-size: 48px; opacity: 0.5; }
+
+  .placeholder-frame p {
+    max-width: 400px;
+    text-align: center;
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  .placeholder-frame code {
+    background: var(--bg-card);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    direction: ltr;
+    color: var(--accent-finance);
+  }
+
+  /* ── Mobile ── */
+  .mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 20;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 20px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 5;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      right: 0;
+      top: 0;
+      transform: translateX(100%);
+      z-index: 15;
+      box-shadow: -4px 0 30px rgba(0,0,0,0.12);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .overlay.open { display: block; }
+    .mobile-toggle { display: flex; }
+    .quick-launch { grid-template-columns: 1fr; }
+  }
+
+  /* ── Scrollbar ── */
+  .sidebar-nav::-webkit-scrollbar { width: 4px; }
+  .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+  .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo-area">
+      <div class="logo-icon">DS</div>
+      <div class="logo-text">Doron Tools</div>
+    </div>
+    <div class="logo-subtitle">כלים פיננסיים ויין מבוססי AI</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <!-- Finance Tools -->
+    <div class="nav-category">
+      <div class="nav-category-label">
+        <span class="dot" style="background: var(--accent-finance)"></span>
+        כלים פיננסיים
+      </div>
+
+      <div class="nav-item" data-category="finance" data-tool="financial-analyst" onclick="loadTool(this)">
+        <div class="nav-icon">🏦</div>
+        <span class="nav-label">Financial Analyst</span>
+        <span class="nav-badge">AI</span>
+      </div>
+
+
+
+      <div class="nav-item" data-category="finance" data-tool="tradesnap" onclick="loadTool(this)">
+        <div class="nav-icon">📝</div>
+        <span class="nav-label">TradeSnap</span>
+        <span class="nav-badge">תיעוד עסקאות</span>
+      </div>
+
+      <div class="nav-item" data-category="finance" data-tool="calculator" onclick="loadTool(this)">
+        <div class="nav-icon">🧮</div>
+        <span class="nav-label">מחשבון פיננסי</span>
+        <span class="nav-badge">חישובים</span>
+      </div>
+    </div>
+
+    <!-- Market -->
+    <div class="nav-category">
+      <div class="nav-category-label">
+        <span class="dot" style="background: var(--accent-market)"></span>
+        שוק ההון
+      </div>
+
+      <div class="nav-item" data-category="market" data-tool="wallstreet-il" onclick="loadTool(this)">
+        <div class="nav-icon">🇺🇸</div>
+        <span class="nav-label">וול סטריט IL</span>
+        <span class="nav-badge">סקירת AI יומית</span>
+      </div>
+    </div>
+
+    <!-- Wine -->
+    <div class="nav-category">
+      <div class="nav-category-label">
+        <span class="dot" style="background: var(--accent-wine)"></span>
+        יין
+      </div>
+
+      <div class="nav-item" data-category="wine" data-tool="wine-journal" onclick="loadTool(this)">
+        <div class="nav-icon">🍷</div>
+        <span class="nav-label">Wine Journal</span>
+        <span class="nav-badge">יומן</span>
+      </div>
+
+
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    נבנה ע״י דורון שריבמן · <a href="https://github.com/doronsh170" target="_blank">GitHub</a>
+  </div>
+</aside>
+
+<!-- Main Area -->
+<main class="main-content">
+
+  <!-- Welcome Screen -->
+  <div class="welcome-screen" id="welcomeScreen">
+    <div class="welcome-icon">🚀</div>
+    <h1 class="welcome-title">ברוכים הבאים</h1>
+    <p class="welcome-desc">
+      כל הכלים הפיננסיים וכלי היין שלך — במקום אחד.
+      בחר כלי מהתפריט או התחל מהגישה המהירה.
+    </p>
+    <div class="quick-launch">
+      <div class="quick-card" data-cat="finance" onclick="quickLaunch('financial-analyst')">
+        <div class="quick-card-icon">🏦</div>
+        <div class="quick-card-title">Financial Analyst</div>
+        <div class="quick-card-desc">ניתוח דוחות כספיים עם AI</div>
+      </div>
+      <div class="quick-card" data-cat="market" onclick="quickLaunch('wallstreet-il')">
+        <div class="quick-card-icon">🇺🇸</div>
+        <div class="quick-card-title">וול סטריט IL</div>
+        <div class="quick-card-desc">סקירת שוק יומית מבוססת AI</div>
+      </div>
+      <div class="quick-card" data-cat="wine" onclick="quickLaunch('wine-journal')">
+        <div class="quick-card-icon">🍷</div>
+        <div class="quick-card-title">Wine Journal</div>
+        <div class="quick-card-desc">יומן יינות אישי עם AI</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tool Frame -->
+  <div class="tool-frame-wrapper" id="toolFrame">
+    <div class="tool-topbar">
+      <span class="tool-topbar-icon" id="toolIcon"></span>
+      <span class="tool-topbar-title" id="toolTitle"></span>
+      <div class="tool-topbar-actions">
+        <button class="topbar-btn" onclick="openExternal()">פתח בחלון חדש ↗</button>
+        <button class="topbar-btn" onclick="reloadFrame()">רענן ↻</button>
+        <button class="topbar-btn" onclick="goHome()">חזרה ←</button>
+      </div>
+      <span class="tool-topbar-url" id="toolUrl"></span>
+    </div>
+    <iframe class="tool-iframe" id="toolIframe" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"></iframe>
+    <div class="placeholder-frame" id="placeholderFrame">
+      <div class="icon">⚙️</div>
+      <p>
+        הכלי הזה עדיין לא מוגדר.<br>
+        ערוך את הקובץ והוסף את ה-URL של הכלי ב-<code>TOOLS_CONFIG</code>
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // ═══════════════════════════════════════════════════════
+  //  🔧 TOOLS CONFIGURATION — UPDATE URLS HERE
+  // ═══════════════════════════════════════════════════════
+  const TOOLS_CONFIG = {
+    'financial-analyst': {
+      name: 'Financial Analyst',
+      icon: '🏦',
+      url: 'https://wall-street-analyst.netlify.app/'
+    },
+    'tradesnap': {
+      name: 'TradeSnap',
+      icon: '📝',
+      url: 'https://doronsh170.github.io/tradesnap/'
+    },
+    'calculator': {
+      name: 'מחשבון פיננסי',
+      icon: '🧮',
+      url: 'https://doronsh170.github.io/doron-calculator/'
+    },
+    'wallstreet-il': {
+      name: 'וול סטריט IL',
+      icon: '🇺🇸',
+      url: 'https://doronsh170.github.io/wallstreet-il/'
+    },
+    'wine-journal': {
+      name: 'Wine Journal',
+      icon: '🍷',
+      url: 'https://wine-circle.netlify.app/'
+    },
+  };
+
+  let currentToolUrl = '';
+
+  function loadTool(el) {
+    const toolId = el.dataset.tool;
+    const config = TOOLS_CONFIG[toolId];
+    if (!config) return;
+
+    // Update active state
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+
+    // Show frame, hide welcome
+    document.getElementById('welcomeScreen').style.display = 'none';
+    document.getElementById('toolFrame').classList.add('active');
+
+    // Update topbar
+    document.getElementById('toolIcon').textContent = config.icon;
+    document.getElementById('toolTitle').textContent = config.name;
+    document.getElementById('toolUrl').textContent = config.url || 'לא הוגדר';
+
+    const iframe = document.getElementById('toolIframe');
+    const placeholder = document.getElementById('placeholderFrame');
+
+    if (config.url) {
+      iframe.style.display = 'block';
+      placeholder.style.display = 'none';
+      iframe.src = config.url;
+      currentToolUrl = config.url;
+    } else {
+      iframe.style.display = 'none';
+      placeholder.style.display = 'flex';
+      currentToolUrl = '';
+    }
+
+    // Close mobile sidebar
+    if (window.innerWidth <= 768) toggleSidebar();
+  }
+
+  function quickLaunch(toolId) {
+    const el = document.querySelector(`[data-tool="${toolId}"]`);
+    if (el) loadTool(el);
+  }
+
+  function goHome() {
+    document.getElementById('welcomeScreen').style.display = 'flex';
+    document.getElementById('toolFrame').classList.remove('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('toolIframe').src = '';
+  }
+
+  function openExternal() {
+    if (currentToolUrl) window.open(currentToolUrl, '_blank');
+  }
+
+  function reloadFrame() {
+    const iframe = document.getElementById('toolIframe');
+    if (iframe.src) iframe.src = iframe.src;
+  }
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+  }
+
+  // Keyboard shortcut: Escape to go home
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') goHome();
+  });
+</script>
+
+</body>
+</html>
