@@ -734,20 +734,29 @@
 
   let currentToolUrl = '';
 
+  function isMobile() {
+    return window.innerWidth <= 768;
+  }
+
   function loadTool(el) {
     const toolId = el.dataset.tool;
     const config = TOOLS_CONFIG[toolId];
-    if (!config) return;
+    if (!config || !config.url) return;
 
-    // Update active state
+    // Mobile: open directly
+    if (isMobile()) {
+      if (document.getElementById('sidebar').classList.contains('open')) toggleSidebar();
+      window.location.href = config.url;
+      return;
+    }
+
+    // Desktop: use iframe
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     el.classList.add('active');
 
-    // Show frame, hide welcome
     document.getElementById('welcomeScreen').style.display = 'none';
     document.getElementById('toolFrame').classList.add('active');
 
-    // Update topbar
     document.getElementById('toolIcon').textContent = config.icon;
     document.getElementById('toolTitle').textContent = config.name;
     document.getElementById('toolUrl').textContent = config.url || 'לא הוגדר';
@@ -755,25 +764,23 @@
     const iframe = document.getElementById('toolIframe');
     const placeholder = document.getElementById('placeholderFrame');
 
-    if (config.url) {
-      iframe.style.display = 'block';
-      placeholder.style.display = 'none';
-      iframe.src = config.url;
-      currentToolUrl = config.url;
-    } else {
-      iframe.style.display = 'none';
-      placeholder.style.display = 'flex';
-      currentToolUrl = '';
-    }
-
-    // Close mobile sidebar
-    if (window.innerWidth <= 768) toggleSidebar();
-
-    // Show mobile home button
-    document.getElementById('mobileHomeBtn').classList.add('visible');
+    iframe.style.display = 'block';
+    placeholder.style.display = 'none';
+    iframe.src = config.url;
+    currentToolUrl = config.url;
   }
 
   function quickLaunch(toolId) {
+    const config = TOOLS_CONFIG[toolId];
+    if (!config || !config.url) return;
+
+    // Mobile: open directly
+    if (isMobile()) {
+      window.location.href = config.url;
+      return;
+    }
+
+    // Desktop: use iframe
     const el = document.querySelector(`[data-tool="${toolId}"]`);
     if (el) loadTool(el);
   }
