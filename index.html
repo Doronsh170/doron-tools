@@ -523,7 +523,7 @@
     .sidebar.open { transform: translateX(0); box-shadow: -4px 0 20px rgba(0,0,0,0.15); }
     .overlay.open { display: block; }
     .mobile-toggle { display: flex; }
-    .quick-launch { grid-template-columns: 1fr; }
+    .quick-launch { grid-template-columns: repeat(2, 1fr) !important; max-width: 100% !important; }
 
     .tool-topbar {
       height: 52px;
@@ -656,13 +656,28 @@
     <h1 class="welcome-title">ברוכים הבאים</h1>
     <p class="welcome-desc">
       כל הכלים הפיננסיים וכלי היין שלך — במקום אחד.
-      בחר כלי מהתפריט או התחל מהגישה המהירה.
+      בחר כלי להתחיל.
     </p>
-    <div class="quick-launch">
+    <div class="quick-launch" style="max-width: 900px; grid-template-columns: repeat(3, 1fr);">
       <div class="quick-card" data-cat="finance" onclick="quickLaunch('financial-analyst')">
         <div class="quick-card-icon">🏦</div>
         <div class="quick-card-title">Financial Analyst</div>
         <div class="quick-card-desc">ניתוח דוחות כספיים עם AI</div>
+      </div>
+      <div class="quick-card" data-cat="finance" onclick="quickLaunch('fundamental-pro')">
+        <div class="quick-card-icon">📊</div>
+        <div class="quick-card-title">סורק פנדמנטלי Pro</div>
+        <div class="quick-card-desc">סריקת מניות ו-ETF</div>
+      </div>
+      <div class="quick-card" data-cat="finance" onclick="quickLaunch('tradesnap')">
+        <div class="quick-card-icon">📝</div>
+        <div class="quick-card-title">TradeSnap</div>
+        <div class="quick-card-desc">תיעוד עסקאות</div>
+      </div>
+      <div class="quick-card" data-cat="finance" onclick="quickLaunch('calculator')">
+        <div class="quick-card-icon">🧮</div>
+        <div class="quick-card-title">מחשבון פיננסי</div>
+        <div class="quick-card-desc">חישובים פיננסיים</div>
       </div>
       <div class="quick-card" data-cat="market" onclick="quickLaunch('wallstreet-il')">
         <div class="quick-card-icon">🇺🇸</div>
