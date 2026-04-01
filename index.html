@@ -395,6 +395,18 @@
     color: var(--text-primary);
   }
 
+  .topbar-btn.home-btn {
+    background: var(--accent-finance);
+    color: #fff;
+    border-color: var(--accent-finance);
+    font-weight: 600;
+  }
+
+  .topbar-btn.home-btn:hover {
+    opacity: 0.9;
+    color: #fff;
+  }
+
   .tool-iframe {
     flex: 1;
     border: none;
@@ -447,38 +459,93 @@
     cursor: pointer;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .mobile-home-btn {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 20;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--accent-finance);
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
 
   .overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.3);
-    z-index: 5;
+    background: rgba(0,0,0,0.4);
+    z-index: 12;
   }
 
   @media (max-width: 768px) {
     body {
-      overflow-y: auto;
+      overflow: hidden;
     }
     .main-content {
-      height: auto;
-      min-height: 100vh;
-      overflow: visible;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .welcome-screen {
+      padding-top: 70px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .sidebar {
       position: fixed;
       right: 0;
       top: 0;
+      width: 100%;
+      min-width: 100%;
+      height: 100vh;
       transform: translateX(100%);
       z-index: 15;
-      box-shadow: -4px 0 30px rgba(0,0,0,0.12);
+      box-shadow: none;
     }
     .sidebar.open { transform: translateX(0); }
     .overlay.open { display: block; }
     .mobile-toggle { display: flex; }
+    .mobile-home-btn.visible { display: flex; }
     .quick-launch { grid-template-columns: 1fr; }
-    .welcome-screen { padding-top: 60px; }
+
+    .tool-topbar {
+      height: 52px;
+      min-height: 52px;
+      padding: 0 12px;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+    .tool-topbar-url { display: none; }
+    .tool-topbar-icon { display: none; }
+    .tool-topbar-title { font-size: 14px; }
+    .tool-topbar-actions { gap: 4px; }
+    .topbar-btn {
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+    .topbar-btn.desktop-only { display: none; }
+
+    .tool-frame-wrapper {
+      height: 100vh;
+    }
+    .tool-frame-wrapper.active {
+      display: flex;
+      height: 100vh;
+    }
+    .tool-iframe {
+      height: calc(100vh - 56px);
+    }
   }
 
   /* ── Scrollbar ── */
@@ -490,6 +557,7 @@
 <body>
 
 <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+<button class="mobile-home-btn" id="mobileHomeBtn" onclick="goHome()">🏠</button>
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
 <!-- Sidebar -->
@@ -606,12 +674,12 @@
   <!-- Tool Frame -->
   <div class="tool-frame-wrapper" id="toolFrame">
     <div class="tool-topbar">
+      <button class="topbar-btn home-btn" onclick="goHome()">← ראשי</button>
       <span class="tool-topbar-icon" id="toolIcon"></span>
       <span class="tool-topbar-title" id="toolTitle"></span>
       <div class="tool-topbar-actions">
-        <button class="topbar-btn" onclick="openExternal()">פתח בחלון חדש ↗</button>
-        <button class="topbar-btn" onclick="reloadFrame()">רענן ↻</button>
-        <button class="topbar-btn" onclick="goHome()">חזרה ←</button>
+        <button class="topbar-btn desktop-only" onclick="openExternal()">פתח בחלון חדש ↗</button>
+        <button class="topbar-btn" onclick="reloadFrame()">↻</button>
       </div>
       <span class="tool-topbar-url" id="toolUrl"></span>
     </div>
@@ -700,6 +768,9 @@
 
     // Close mobile sidebar
     if (window.innerWidth <= 768) toggleSidebar();
+
+    // Show mobile home button
+    document.getElementById('mobileHomeBtn').classList.add('visible');
   }
 
   function quickLaunch(toolId) {
@@ -712,6 +783,7 @@
     document.getElementById('toolFrame').classList.remove('active');
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('toolIframe').src = '';
+    document.getElementById('mobileHomeBtn').classList.remove('visible');
   }
 
   function openExternal() {
