@@ -558,9 +558,106 @@
   .sidebar-nav::-webkit-scrollbar { width: 4px; }
   .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
   .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  /* ── Disclaimer Modal ── */
+  .disclaimer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .disclaimer-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .disclaimer-modal {
+    background: #fff;
+    border-radius: 20px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 32px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    direction: rtl;
+    text-align: right;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+  }
+  .disclaimer-overlay.visible .disclaimer-modal {
+    transform: translateY(0);
+  }
+  .disclaimer-modal h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .disclaimer-modal .dm-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .disclaimer-modal .dm-content {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .disclaimer-modal .dm-content p {
+    font-size: 13px;
+    color: #334155;
+    line-height: 1.8;
+    margin: 8px 0;
+  }
+  .disclaimer-modal .dm-content p strong {
+    color: var(--text-primary);
+  }
+  .disclaimer-modal .dm-accept-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent-market);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Heebo', sans-serif;
+    transition: background 0.2s;
+  }
+  .disclaimer-modal .dm-accept-btn:hover {
+    background: #245da0;
+  }
 </style>
 </head>
 <body>
+
+<!-- Disclaimer Modal for Wall Street IL -->
+<div class="disclaimer-overlay" id="disclaimerOverlay">
+  <div class="disclaimer-modal">
+    <div style="text-align:center;font-size:36px;margin-bottom:12px;">⚠️</div>
+    <h2>גילוי נאות</h2>
+    <p class="dm-subtitle">יש לקרוא ולאשר לפני הכניסה לסקירות</p>
+    <div class="dm-content">
+      <p><strong>מקור התוכן:</strong> הסקירות באתר זה מופקות באופן אוטומטי באמצעות בינה מלאכותית (AI) על בסיס נתוני שוק פומביים. התוכן לא נכתב ולא נבדק על ידי אדם.</p>
+      <p><strong>אין ייעוץ השקעות:</strong> התוכן מוצג למטרות מידע בלבד ואינו מהווה ייעוץ, שיווק השקעות, או המלצה לקנייה או מכירה של ניירות ערך — כהגדרתם בחוק הסדרת העיסוק בייעוץ השקעות, התשנ"ה-1995.</p>
+      <p><strong>דיוק ואמינות:</strong> ייתכנו אי-דיוקים, השמטות או שגיאות בנתונים ובפרשנות. אין להסתמך על תוכן זה כמקור יחיד לקבלת החלטות.</p>
+      <p><strong>אחריות:</strong> כל החלטת השקעה היא באחריות המשתמש בלבד. ט.ל.ח.</p>
+    </div>
+    <button class="dm-accept-btn" id="disclaimerAcceptBtn">קראתי ואני מאשר ✓</button>
+  </div>
+</div>
 
 <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
 <button class="mobile-home-btn" id="mobileHomeBtn" onclick="goHome()">🏠</button>
@@ -753,6 +850,35 @@
   };
 
   let currentToolUrl = '';
+  let pendingToolAction = null;
+
+  // ═══ Disclaimer Logic ═══
+  const TOOLS_NEEDING_DISCLAIMER = ['wallstreet-il'];
+
+  function needsDisclaimer(toolId) {
+    return TOOLS_NEEDING_DISCLAIMER.includes(toolId) && sessionStorage.getItem('disclaimer_' + toolId) !== '1';
+  }
+
+  function showDisclaimer(toolId, callback) {
+    const overlay = document.getElementById('disclaimerOverlay');
+    overlay.classList.add('visible');
+    pendingToolAction = { toolId, callback };
+  }
+
+  document.getElementById('disclaimerAcceptBtn').addEventListener('click', function() {
+    const overlay = document.getElementById('disclaimerOverlay');
+    overlay.classList.remove('visible');
+    if (pendingToolAction) {
+      sessionStorage.setItem('disclaimer_' + pendingToolAction.toolId, '1');
+      pendingToolAction.callback();
+      pendingToolAction = null;
+    }
+  });
+
+  // Close on overlay click (outside modal)
+  document.getElementById('disclaimerOverlay').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('visible');
+  });
 
   function isMobile() {
     return window.innerWidth <= 768;
@@ -762,6 +888,13 @@
     const toolId = el.dataset.tool;
     const config = TOOLS_CONFIG[toolId];
     if (!config || !config.url) return;
+
+    // Check disclaimer
+    if (needsDisclaimer(toolId)) {
+      if (document.getElementById('sidebar').classList.contains('open')) toggleSidebar();
+      showDisclaimer(toolId, () => loadTool(el));
+      return;
+    }
 
     // Mobile: open directly
     if (isMobile()) {
@@ -793,6 +926,12 @@
   function quickLaunch(toolId) {
     const config = TOOLS_CONFIG[toolId];
     if (!config || !config.url) return;
+
+    // Check disclaimer
+    if (needsDisclaimer(toolId)) {
+      showDisclaimer(toolId, () => quickLaunch(toolId));
+      return;
+    }
 
     // Mobile: open directly
     if (isMobile()) {
