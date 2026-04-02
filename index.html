@@ -46,10 +46,17 @@
     border-left: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    position: relative;
-    z-index: 10;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 15;
     transition: transform 0.3s ease;
-    box-shadow: -2px 0 12px rgba(0,0,0,0.04);
+    box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+    transform: translateX(100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
   }
 
   .sidebar-header {
@@ -444,7 +451,7 @@
 
   /* ── Mobile ── */
   .mobile-toggle {
-    display: none;
+    display: flex;
     position: fixed;
     top: 12px;
     left: 12px;
@@ -485,9 +492,11 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0,0,0,0.3);
     z-index: 12;
   }
+
+  .overlay.open { display: block; }
 
   @media (max-width: 768px) {
     body {
@@ -502,27 +511,16 @@
       overflow: visible;
     }
     .welcome-screen {
-      padding-top: 70px;
       min-height: 100vh;
       height: auto;
       overflow: visible;
       justify-content: flex-start;
     }
     .sidebar {
-      position: fixed;
-      right: 0;
-      top: 0;
       width: 85%;
       min-width: 280px;
       max-width: 320px;
-      height: 100vh;
-      transform: translateX(100%);
-      z-index: 15;
-      box-shadow: none;
     }
-    .sidebar.open { transform: translateX(0); box-shadow: -4px 0 20px rgba(0,0,0,0.15); }
-    .overlay.open { display: block; }
-    .mobile-toggle { display: flex; }
     .quick-launch { grid-template-columns: repeat(2, 1fr) !important; max-width: 100% !important; }
 
     .tool-topbar {
@@ -643,18 +641,13 @@
 </head>
 <body>
 
-<!-- Disclaimer Modal for Wall Street IL -->
+<!-- Disclaimer Modal (dynamic per tool) -->
 <div class="disclaimer-overlay" id="disclaimerOverlay">
   <div class="disclaimer-modal">
     <div style="text-align:center;font-size:36px;margin-bottom:12px;">⚠️</div>
     <h2>גילוי נאות</h2>
-    <p class="dm-subtitle">יש לקרוא ולאשר לפני הכניסה לסקירות</p>
-    <div class="dm-content">
-      <p><strong>מקור התוכן:</strong> הסקירות באתר זה מופקות באופן אוטומטי באמצעות בינה מלאכותית (AI) על בסיס נתוני שוק פומביים. התוכן לא נכתב ולא נבדק על ידי אדם.</p>
-      <p><strong>אין ייעוץ השקעות:</strong> התוכן מוצג למטרות מידע בלבד ואינו מהווה ייעוץ, שיווק השקעות, או המלצה לקנייה או מכירה של ניירות ערך — כהגדרתם בחוק הסדרת העיסוק בייעוץ השקעות, התשנ"ה-1995.</p>
-      <p><strong>דיוק ואמינות:</strong> ייתכנו אי-דיוקים, השמטות או שגיאות בנתונים ובפרשנות. אין להסתמך על תוכן זה כמקור יחיד לקבלת החלטות.</p>
-      <p><strong>אחריות:</strong> כל החלטת השקעה היא באחריות המשתמש בלבד. ט.ל.ח.</p>
-    </div>
+    <p class="dm-subtitle" id="disclaimerSubtitle"></p>
+    <div class="dm-content" id="disclaimerContent"></div>
     <button class="dm-accept-btn" id="disclaimerAcceptBtn">קראתי ואני מאשר ✓</button>
   </div>
 </div>
@@ -787,7 +780,7 @@
         <div class="quick-card-desc">יומן יינות אישי עם AI</div>
       </div>
     </div>
-    <p style="margin-top: 40px; font-size: 13px; color: var(--text-muted);">נבנה ע״י דורון שריבמן</p>
+    <p style="margin-top: 40px; font-size: 13px; color: var(--text-muted);">Doron Tools © 2026<br>דורון שריבמן</p>
   </div>
   <div class="tool-frame-wrapper" id="toolFrame">
     <div class="tool-topbar">
@@ -852,22 +845,50 @@
   let currentToolUrl = '';
   let pendingToolAction = null;
 
-  // ═══ Disclaimer Logic ═══
-  const TOOLS_NEEDING_DISCLAIMER = ['wallstreet-il'];
+  // ═══ Disclaimer Logic — Per-Tool Content ═══
+  const DISCLAIMER_CONTENT = {
+    'wallstreet-il': {
+      subtitle: 'יש לקרוא ולאשר לפני הכניסה לסקירות',
+      html: `
+        <p><strong>מקור התוכן:</strong> הסקירות באתר זה מופקות באופן אוטומטי באמצעות בינה מלאכותית (AI) על בסיס נתוני שוק פומביים. התוכן לא נכתב ולא נבדק על ידי אדם.</p>
+        <p><strong>אין ייעוץ השקעות:</strong> התוכן מוצג למטרות מידע בלבד ואינו מהווה ייעוץ, שיווק השקעות, או המלצה לקנייה או מכירה של ניירות ערך — כהגדרתם בחוק הסדרת העיסוק בייעוץ השקעות, התשנ"ה-1995.</p>
+        <p><strong>דיוק ואמינות:</strong> ייתכנו אי-דיוקים, השמטות או שגיאות בנתונים ובפרשנות. אין להסתמך על תוכן זה כמקור יחיד לקבלת החלטות.</p>
+        <p><strong>אחריות:</strong> כל החלטת השקעה היא באחריות המשתמש בלבד. ט.ל.ח.</p>
+      `
+    },
+    'fundamental-pro': {
+      subtitle: 'יש לקרוא ולאשר לפני השימוש בסורק',
+      html: `
+        <p><strong>מקור הנתונים:</strong> הנתונים מבוססים על מקורות חיצוניים (Finnhub, Google) ועלולים להיות חלקיים, מאוחרים או לא מדויקים. הניתוח מופק באמצעות בינה מלאכותית (AI).</p>
+        <p><strong>אין ייעוץ השקעות:</strong> התוכן אינו מהווה ייעוץ, שיווק השקעות, או המלצה לקנייה או מכירה של ניירות ערך — כהגדרתם בחוק הסדרת העיסוק בייעוץ השקעות, התשנ"ה-1995.</p>
+        <p><strong>אחריות:</strong> כל החלטת השקעה היא באחריות המשתמש בלבד. אין להסתמך על תוכן זה כמקור יחיד לקבלת החלטות. ט.ל.ח.</p>
+      `
+    },
+    'calculator': {
+      subtitle: 'יש לקרוא ולאשר לפני השימוש במחשבון',
+      html: `
+        <p>המחשבון נועד למטרות הדגמה וחינוך פיננסי בלבד. התוצאות המוצגות מתבססות על נתוני תשואה היסטוריים בלבד (1995–2024) ואינן מהוות תחזית, הבטחה או התחייבות לתשואה עתידית כלשהי. ביצועי עבר אינם ערובה לביצועים עתידיים.</p>
+        <p>החישובים אינם מביאים בחשבון את מצבו הפיננסי האישי של המשתמש, מטרות ההשקעה, אופק ההשקעה, רמת הסיכון המתאימה לו, חבות המס הרלוונטית, עלויות עסקה, או כל גורם אישי אחר.</p>
+        <p>אין לראות בתוצאות המחשבון משום ייעוץ השקעות, ייעוץ פנסיוני, ייעוץ מס או כל ייעוץ פיננסי אחר. השימוש במידע המוצג הינו באחריות המשתמש בלבד. לפני כל החלטת השקעה מומלץ להתייעץ עם יועץ השקעות מורשה בעל רישיון כדין. ט.ל.ח.</p>
+      `
+    }
+  };
 
   function needsDisclaimer(toolId) {
-    return TOOLS_NEEDING_DISCLAIMER.includes(toolId) && sessionStorage.getItem('disclaimer_' + toolId) !== '1';
+    return toolId in DISCLAIMER_CONTENT && sessionStorage.getItem('disclaimer_' + toolId) !== '1';
   }
 
   function showDisclaimer(toolId, callback) {
-    const overlay = document.getElementById('disclaimerOverlay');
-    overlay.classList.add('visible');
+    const content = DISCLAIMER_CONTENT[toolId];
+    if (!content) return;
+    document.getElementById('disclaimerSubtitle').textContent = content.subtitle;
+    document.getElementById('disclaimerContent').innerHTML = content.html;
+    document.getElementById('disclaimerOverlay').classList.add('visible');
     pendingToolAction = { toolId, callback };
   }
 
   document.getElementById('disclaimerAcceptBtn').addEventListener('click', function() {
-    const overlay = document.getElementById('disclaimerOverlay');
-    overlay.classList.remove('visible');
+    document.getElementById('disclaimerOverlay').classList.remove('visible');
     if (pendingToolAction) {
       sessionStorage.setItem('disclaimer_' + pendingToolAction.toolId, '1');
       pendingToolAction.callback();
@@ -875,7 +896,6 @@
     }
   });
 
-  // Close on overlay click (outside modal)
   document.getElementById('disclaimerOverlay').addEventListener('click', function(e) {
     if (e.target === this) this.classList.remove('visible');
   });
@@ -904,6 +924,7 @@
     }
 
     // Desktop: use iframe
+    if (document.getElementById('sidebar').classList.contains('open')) toggleSidebar();
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     el.classList.add('active');
 
