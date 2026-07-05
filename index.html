@@ -672,8 +672,8 @@
 
       <div class="nav-item" data-category="market" data-tool="wallstreet-il" onclick="loadTool(this)">
         <div class="nav-icon">🇺🇸</div>
-        <span class="nav-label">וול סטריט IL</span>
-        <span class="nav-badge">סקירת AI יומית</span>
+        <span class="nav-label">סקירות וול סטריט</span>
+        <span class="nav-badge">הכנה ועדכונים</span>
       </div>
     </div>
   </nav>
@@ -725,8 +725,8 @@
 
       <div class="quick-card" data-cat="market" onclick="quickLaunch('wallstreet-il')">
         <div class="quick-card-icon">🇺🇸</div>
-        <div class="quick-card-title">וול סטריט IL</div>
-        <div class="quick-card-desc">סקירת שוק יומית מבוססת AI</div>
+        <div class="quick-card-title">סקירות וול סטריט</div>
+        <div class="quick-card-desc">סקירות שוק בעברית, הכנה למסחר, עדכון ביניים, סיכום יום וסיכום שבועי</div>
       </div>
     </div>
 
@@ -760,7 +760,7 @@
     'financial-analyst': {
       name: 'Momentum Desk',
       icon: '🧭',
-      url: 'https://doronsh170.github.io/desktop-view/'
+      url: 'https://doronsh170.github.io/wallstreet-view/'
     },
     'fundamental-pro': {
       name: 'סורק פנדמנטלי Pro',
@@ -783,9 +783,9 @@
       url: 'https://doronsh170.github.io/dashbord-pensioni1/'
     },
     'wallstreet-il': {
-      name: 'וול סטריט IL',
+      name: 'סקירות וול סטריט',
       icon: '🇺🇸',
-      url: 'https://doronsh170.github.io/wallstreet-il/'
+      url: 'https://doronsh170.github.io/wallstreet-reviews-v2/'
     },
   };
 
@@ -793,6 +793,16 @@
   let pendingToolAction = null;
 
   const DISCLAIMER_CONTENT = {
+    'financial-analyst': {
+      subtitle: 'יש לקרוא ולאשר לפני הכניסה ל-Momentum Desk',
+      html: `
+        <p><strong>מטרת הכלי:</strong> Momentum Desk נועד למיפוי מניות וול סטריט לפי סקטורים, תתי־סקטורים וקבוצות השוואה רלוונטיות למסחר מומנטום.</p>
+        <p><strong>אין ייעוץ השקעות:</strong> המידע באתר מוצג לצורכי מידע, למידה וסינון ראשוני בלבד. הוא אינו מהווה ייעוץ השקעות, שיווק השקעות, ניתוח השקעות אישי או המלצה לקנייה, מכירה או החזקה של ניירות ערך.</p>
+        <p><strong>דיוק וסיווגים:</strong> החלוקה לקבוצות, הסקטורים, התמות והקישורים החיצוניים מבוססים על עריכה ידנית ומקורות פומביים. ייתכנו טעויות, סיווגים לא מדויקים, קישורים שאינם פעילים, נתונים חסרים או מידע שאינו מעודכן.</p>
+        <p><strong>שימוש במסחר:</strong> הכלי אינו מחליף בדיקה עצמאית של גרף, מחזורי מסחר, נזילות, חדשות, דוחות, סיכונים ומצב שוק. אין להסתמך עליו כמקור יחיד לקבלת החלטות מסחר או השקעה.</p>
+        <p><strong>אחריות:</strong> כל פעולה בניירות ערך היא באחריות המשתמש בלבד. ט.ל.ח.</p>
+      `
+    },
     'wallstreet-il': {
       subtitle: 'יש לקרוא ולאשר לפני הכניסה לסקירות',
       html: `
