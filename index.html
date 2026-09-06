@@ -3,954 +3,997 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doron Tools | כלים פיננסיים</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Doron Tools | כלים לניתוח שוק ההון ולתכנון פיננסי</title>
+
+<meta name="description" content="Doron Tools — מערכת כלים לניתוח שוק ההון, מעקב מסחר ותכנון פיננסי ופנסיוני. סקירות שוק, סריקה פונדמנטלית, מיפוי סקטורים, יומן עסקאות ומפת חיסכון.">
+<meta name="author" content="דורון שרייבמן">
+<meta name="theme-color" content="#07795c">
+<meta name="color-scheme" content="light">
+<link rel="canonical" href="https://doronsh170.github.io/doron-tools/">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="he_IL">
+<meta property="og:site_name" content="Doron Tools">
+<meta property="og:title" content="Doron Tools | כלים לניתוח שוק ההון ולתכנון פיננסי">
+<meta property="og:description" content="מערכת כלים לניתוח שוק ההון, מעקב מסחר ותכנון פיננסי ופנסיוני.">
+<meta property="og:url" content="https://doronsh170.github.io/doron-tools/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Doron Tools | כלים לניתוח שוק ההון ולתכנון פיננסי">
+<meta name="twitter:description" content="מערכת כלים לניתוח שוק ההון, מעקב מסחר ותכנון פיננסי ופנסיוני.">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='rgb(7,121,92)'/%3E%3Cstop offset='1' stop-color='rgb(45,111,186)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='43' font-family='Helvetica,Arial,sans-serif' font-size='29' font-weight='700' fill='%23fff' text-anchor='middle'%3EDS%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='rgb(7,121,92)'/%3E%3Ctext x='32' y='43' font-family='Helvetica,Arial,sans-serif' font-size='29' font-weight='700' fill='%23fff' text-anchor='middle'%3EDS%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
   :root {
-    --bg-primary: #f5f7fa;
-    --bg-secondary: #ffffff;
-    --bg-card: #ffffff;
-    --bg-hover: #f0f2f5;
-    --bg-active: #e8edf4;
-    --accent-finance: #0a9b76;
-    --accent-market: #2d6fba;
+    --bg-page: #f5f7fa;
+    --bg-surface: #ffffff;
+    --bg-hover: #eef1f5;
+    --bg-active: #e6ecf3;
+
+    /* Accents — darkened to meet WCAG AA (>=4.5:1) as text and as button fills */
+    --accent-market: #2d6fba;        /* 5.13:1 on white */
+    --accent-market-strong: #245da0;
+    --accent-market-tint: #eaf1fa;
+    --accent-planning: #07795c;      /* 5.39:1 on white */
+    --accent-planning-strong: #06654d;
+    --accent-planning-tint: #e6f3ef;
+
     --text-primary: #1a2332;
-    --text-secondary: #5a6a80;
-    --text-muted: #8d99a8;
+    --text-secondary: #4a5769;
+    --text-muted: #616f82;           /* 5.12:1 on white, 4.77:1 on page bg */
+
     --border: #e2e6ed;
-    --sidebar-width: 280px;
-    --glow-finance: rgba(10, 155, 118, 0.1);
-    --glow-market: rgba(45, 111, 186, 0.1);
+    --border-strong: #cfd6e0;
+    --focus: #1d5fb0;
+    --action: #1e2a3a;
+    --action-hover: #2c3b50;
+
+    --sidebar-width: 272px;
+    --mobile-header: 56px;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+
+    --shadow-sm: 0 1px 2px rgba(16,24,40,.05);
+    --shadow-md: 0 4px 16px rgba(16,24,40,.07);
+    --shadow-lg: 0 24px 60px rgba(16,24,40,.20);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  /* Author rules like .dialog-backdrop{display:flex} outrank the UA
+     [hidden]{display:none}, which would leave closed overlays in the tab
+     order and the accessibility tree. Re-assert it once, globally. */
+  [hidden] { display: none !important; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
   body {
-    font-family: 'Heebo', sans-serif;
-    background: var(--bg-primary);
+    font-family: 'Heebo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: var(--bg-page);
     color: var(--text-primary);
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
+    min-height: 100vh;
+    line-height: 1.5;
+    padding-top: var(--mobile-header);
   }
 
+  svg { display: block; }
+  .icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-sm { width: 16px; height: 16px; }
+  .icon-lg { width: 22px; height: 22px; }
+
+  /* ---------- Focus ---------- */
+  :focus { outline: none; }
+  :focus-visible,
+  .nav-item:focus-visible,
+  .tool-card:focus-visible,
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  .skip-link {
+    position: absolute;
+    inset-inline-start: 12px;
+    top: -60px;
+    z-index: 200;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: top .15s ease;
+  }
+  .skip-link:focus { top: 12px; }
+
+  /* ---------- Mobile header ---------- */
+  .mobile-header {
+    position: fixed;
+    top: 0; inset-inline: 0;
+    height: var(--mobile-header);
+    z-index: 30;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-inline: 12px;
+  }
+
+  .icon-btn {
+    width: 40px; height: 40px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .icon-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+  /* ---------- Brand ---------- */
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .brand-stack { min-width: 0; }
+
+  .brand-mark {
+    width: 36px; height: 36px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent-planning), var(--accent-market));
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 800; letter-spacing: .5px;
+  }
+  .brand-mark.lg { width: 42px; height: 42px; border-radius: 12px; font-size: 17px; }
+
+  .brand-name {
+    display: block;
+    font-size: 17px; font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -.2px;
+    white-space: nowrap;
+  }
+  .brand-name.lg { font-size: 19px; }
+
+  .brand-tagline {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* ---------- Sidebar ---------- */
   .sidebar {
-    width: var(--sidebar-width);
-    min-width: var(--sidebar-width);
+    position: fixed;
+    top: 0;
+    inset-inline-start: 0;
+    width: min(86vw, 300px);
     height: 100vh;
-    background: var(--bg-secondary);
-    border-left: 1px solid var(--border);
+    z-index: 45;
+    background: var(--bg-surface);
+    border-inline-end: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    position: fixed;
-    right: 0;
-    top: 0;
-    z-index: 15;
-    transition: transform 0.3s ease;
-    box-shadow: -4px 0 20px rgba(0,0,0,0.1);
     transform: translateX(100%);
+    transition: transform .25s ease;
+    box-shadow: var(--shadow-lg);
   }
-
   .sidebar.open { transform: translateX(0); }
 
   .sidebar-header {
-    padding: 24px 20px 20px;
+    padding: 18px 18px 16px;
     border-bottom: 1px solid var(--border);
-  }
-
-  .logo-area {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 6px;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
   }
 
-  .logo-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--accent-finance), var(--accent-market));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: 800;
-    color: #ffffff;
-    letter-spacing: -1px;
-    flex-shrink: 0;
-  }
+  .sidebar-nav { flex: 1; overflow-y: auto; padding: 16px 12px; }
+  .sidebar-nav::-webkit-scrollbar { width: 6px; }
+  .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
 
-  .logo-text {
-    font-family: 'Rubik', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--accent-finance), var(--accent-market));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: -0.5px;
-  }
+  .nav-group + .nav-group { margin-top: 22px; }
 
-  .logo-subtitle {
-    font-size: 12px;
+  .nav-group-label {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 11px; font-weight: 700;
     color: var(--text-muted);
-    font-weight: 400;
-    padding-right: 54px;
-  }
-
-  .sidebar-nav {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px 12px;
-  }
-
-  .nav-category { margin-bottom: 24px; }
-
-  .nav-category-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    padding: 0 10px;
+    letter-spacing: .8px;
+    padding-inline: 10px;
     margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
   }
-
-  .nav-category-label .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
+  .nav-group-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
   .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 12px;
-    border-radius: 10px;
+    display: flex; align-items: center; gap: 11px;
+    width: 100%;
+    padding: 10px 11px;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all 0.2s ease;
-    margin-bottom: 2px;
-    position: relative;
-    text-decoration: none;
+    text-align: start;
     color: var(--text-secondary);
+    font-family: inherit;
+    transition: background .15s ease, color .15s ease;
+    position: relative;
   }
+  .nav-item + .nav-item { margin-top: 2px; }
+  .nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
 
-  .nav-item:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
-  }
-
-  .nav-item.active {
+  .nav-item[aria-current="true"] {
     background: var(--bg-active);
     color: var(--text-primary);
-  }
-
-  .nav-item.active::before {
-    content: '';
-    position: absolute;
-    right: -12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 24px;
-    border-radius: 2px;
-  }
-
-  .nav-item.active[data-category="finance"]::before { background: var(--accent-finance); }
-  .nav-item.active[data-category="market"]::before { background: var(--accent-market); }
-
-  .nav-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-    transition: all 0.2s ease;
-  }
-
-  [data-category="finance"] .nav-icon { background: var(--glow-finance); }
-  [data-category="market"] .nav-icon { background: var(--glow-market); }
-
-  .nav-item.active[data-category="finance"] .nav-icon { background: var(--accent-finance); color: #fff; }
-  .nav-item.active[data-category="market"] .nav-icon { background: var(--accent-market); color: #fff; }
-
-  .nav-label {
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-
-  .nav-badge {
-    margin-right: auto;
-    margin-left: 0;
-    font-size: 10px;
-    padding: 2px 7px;
-    border-radius: 6px;
     font-weight: 600;
-    background: var(--bg-hover);
-    color: var(--text-muted);
+    box-shadow: inset 0 0 0 1px var(--border-strong);
   }
+
+  .nav-item-icon {
+    width: 34px; height: 34px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--cat-tint);
+    color: var(--cat-color);
+  }
+  .nav-item[aria-current="true"] .nav-item-icon { background: var(--cat-color); color: #fff; }
+
+  .nav-item-text { min-width: 0; }
+  .nav-item-name { font-size: 14px; line-height: 1.35; }
+  .nav-item-meta { font-size: 11px; color: var(--text-muted); line-height: 1.35; }
 
   .sidebar-footer {
-    padding: 16px 16px;
+    padding: 14px 18px;
     border-top: 1px solid var(--border);
-    font-size: 11px;
-    color: var(--text-muted);
-    text-align: center;
-  }
-
-  .sidebar-footer a {
-    color: var(--accent-finance);
-    text-decoration: none;
-  }
-
-  .main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .welcome-screen {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 40px 20px;
-    text-align: center;
-    animation: fadeIn 0.6s ease;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .welcome-icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 24px;
-    background: linear-gradient(135deg, var(--accent-finance), var(--accent-market));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 38px;
-    margin-bottom: 24px;
-    box-shadow: 0 12px 40px rgba(10, 155, 118, 0.2);
-  }
-
-  .welcome-title {
-    font-family: 'Rubik', sans-serif;
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 12px;
-    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .welcome-desc {
-    font-size: 16px;
-    color: var(--text-secondary);
-    max-width: 500px;
-    line-height: 1.7;
-    margin-bottom: 40px;
-  }
-
-  .quick-launch {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    max-width: 900px;
-    width: 100%;
-  }
-
-  .quick-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  }
-
-  .quick-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent-finance);
-    box-shadow: 0 8px 30px rgba(10, 155, 118, 0.12);
-  }
-
-  .quick-card[data-cat="market"]:hover {
-    border-color: var(--accent-market);
-    box-shadow: 0 8px 30px rgba(45, 111, 186, 0.12);
-  }
-
-  .quick-card-icon { font-size: 32px; margin-bottom: 12px; }
-  .quick-card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-  .quick-card-desc { font-size: 12px; color: var(--text-muted); }
-
-  .tool-frame-wrapper {
-    flex: 1;
-    display: none;
-    flex-direction: column;
-    animation: slideIn 0.35s ease;
-  }
-
-  .tool-frame-wrapper.active { display: flex; }
-
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateX(-8px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  .tool-topbar {
-    height: 52px;
-    min-height: 52px;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    gap: 12px;
-  }
-
-  .tool-topbar-icon { font-size: 20px; }
-  .tool-topbar-title { font-size: 15px; font-weight: 600; }
-
-  .tool-topbar-url {
-    margin-right: auto;
     font-size: 12px;
     color: var(--text-muted);
-    direction: ltr;
-    font-family: 'Rubik', monospace;
+    line-height: 1.6;
   }
+  .sidebar-footer strong { display: block; color: var(--text-secondary); font-weight: 600; font-size: 13px; }
+  .sidebar-footer a { color: var(--accent-planning); text-decoration: none; font-weight: 500; }
+  .sidebar-footer a:hover { text-decoration: underline; }
 
-  .tool-topbar-actions {
-    display: flex;
-    gap: 8px;
-    margin-right: auto;
+  .scrim {
+    position: fixed; inset: 0; z-index: 40;
+    background: rgba(16,24,40,.42);
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease;
   }
+  .scrim.open { opacity: 1; pointer-events: auto; }
 
-  .topbar-btn {
-    background: var(--bg-hover);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
-    padding: 6px 14px;
-    border-radius: 8px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: 'Heebo', sans-serif;
-    transition: all 0.2s ease;
-  }
+  /* ---------- Main ---------- */
+  .app-main { display: flex; flex-direction: column; min-height: calc(100vh - var(--mobile-header)); }
 
-  .topbar-btn:hover {
-    background: var(--bg-active);
-    color: var(--text-primary);
-  }
+  .home { padding: 28px 18px 40px; }
+  .home-inner { max-width: 1180px; margin-inline: auto; width: 100%; }
 
-  .topbar-btn.home-btn {
-    background: var(--accent-finance);
-    color: #fff;
-    border-color: var(--accent-finance);
-    font-weight: 600;
-  }
-
-  .topbar-btn.home-btn:hover { opacity: 0.9; color: #fff; }
-
-  .tool-iframe {
-    flex: 1;
-    border: none;
-    width: 100%;
-    background: #fff;
-  }
-
-  .placeholder-frame {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    color: var(--text-muted);
-  }
-
-  .placeholder-frame .icon { font-size: 48px; opacity: 0.5; }
-
-  .placeholder-frame p {
-    max-width: 400px;
-    text-align: center;
-    line-height: 1.7;
-    font-size: 14px;
-  }
-
-  .placeholder-frame code {
-    background: var(--bg-card);
-    padding: 3px 10px;
-    border-radius: 6px;
-    font-size: 13px;
-    direction: ltr;
-    color: var(--accent-finance);
-  }
-
-  .mobile-toggle {
-    display: flex;
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    z-index: 20;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    font-size: 20px;
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-
-  .mobile-home-btn {
-    display: none;
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    z-index: 20;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: var(--accent-finance);
-    border: none;
-    color: #fff;
-    font-size: 20px;
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
-
-  .overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.3);
-    z-index: 12;
-  }
-
-  .overlay.open { display: block; }
-
-  .disclaimer-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(4px);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-
-  .disclaimer-overlay.visible {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .disclaimer-modal {
-    background: #fff;
-    border-radius: 20px;
-    max-width: 520px;
-    width: 100%;
-    max-height: 80vh;
-    overflow-y: auto;
-    padding: 32px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    direction: rtl;
-    text-align: right;
-    transform: translateY(20px);
-    transition: transform 0.3s ease;
-  }
-
-  .disclaimer-overlay.visible .disclaimer-modal { transform: translateY(0); }
-
-  .disclaimer-modal h2 {
-    font-size: 22px;
-    font-weight: 800;
+  .home-head { margin-bottom: 22px; }
+  .home-head h1 {
+    font-size: 27px; font-weight: 800;
+    letter-spacing: -.4px;
     color: var(--text-primary);
     margin-bottom: 6px;
-    text-align: center;
+  }
+  .home-head p { font-size: 15px; color: var(--text-secondary); max-width: 62ch; }
+
+  .tool-group + .tool-group { margin-top: 26px; }
+
+  .group-head {
+    display: flex; align-items: baseline; gap: 9px;
+    margin-bottom: 12px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid var(--border);
+  }
+  .group-head h2 {
+    font-size: 15px; font-weight: 700;
+    color: var(--text-primary);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .group-head h2 .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .group-count { font-size: 12px; color: var(--text-muted); }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+    gap: 14px;
   }
 
-  .disclaimer-modal .dm-subtitle {
-    font-size: 13px;
-    color: var(--text-muted);
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
-  .disclaimer-modal .dm-content {
-    background: #f8fafc;
+  .tool-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: start;
+    padding: 17px;
+    background: var(--bg-surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 24px;
-  }
-
-  .disclaimer-modal .dm-content p {
-    font-size: 13px;
-    color: #334155;
-    line-height: 1.8;
-    margin: 8px 0;
-  }
-
-  .disclaimer-modal .dm-content p strong { color: var(--text-primary); }
-
-  .disclaimer-modal .dm-accept-btn {
-    width: 100%;
-    padding: 14px;
-    background: var(--accent-market);
-    color: #fff;
-    border: none;
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: 700;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
     cursor: pointer;
-    font-family: 'Heebo', sans-serif;
-    transition: background 0.2s;
+    font-family: inherit;
+    color: inherit;
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+  }
+  .tool-card:hover {
+    border-color: var(--cat-color);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
   }
 
-  .disclaimer-modal .dm-accept-btn:hover { background: #245da0; }
+  .tool-card-head { display: flex; align-items: center; gap: 11px; }
 
-  .sidebar-nav::-webkit-scrollbar { width: 4px; }
-  .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
-  .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .tool-card-icon {
+    width: 38px; height: 38px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--cat-tint);
+    color: var(--cat-color);
+  }
+  .tool-card-title { font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+  .tool-card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; flex: 1; }
 
-  @media (max-width: 768px) {
-    body {
-      overflow-y: auto;
-      height: auto;
-      min-height: 100vh;
-      display: block;
-    }
+  .tool-card-cta {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 600;
+    color: var(--cat-color);
+    margin-top: 2px;
+  }
+  .tool-card:hover .tool-card-cta { color: var(--cat-strong); }
 
-    .main-content {
-      height: auto;
-      min-height: 100vh;
-      overflow: visible;
-    }
+  .home-foot {
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .home-foot .legal { margin-bottom: 4px; }
 
-    .welcome-screen {
-      min-height: 100vh;
-      height: auto;
-      overflow: visible;
-      justify-content: flex-start;
-    }
+  /* ---------- Tool view ---------- */
+  .tool-view { display: none; flex: 1; flex-direction: column; min-height: 0; }
+  .tool-view.active { display: flex; }
+
+  .tool-bar {
+    height: 52px; min-height: 52px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    gap: 10px;
+    padding-inline: 14px;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 13px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .btn-primary {
+    background: var(--action);
+    border-color: var(--action);
+    color: #fff;
+    font-weight: 600;
+  }
+  .btn-primary:hover { background: var(--action-hover); border-color: var(--action-hover); color: #fff; }
+
+  .tool-bar-id { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .tool-bar-icon { color: var(--cat-color); flex-shrink: 0; }
+  .tool-bar-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tool-bar-actions { margin-inline-start: auto; display: flex; gap: 8px; }
+
+  .tool-frame { flex: 1; width: 100%; border: none; background: #fff; min-height: 0; }
+
+  /* ---------- Disclaimer dialog ---------- */
+  .dialog-backdrop {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(16,24,40,.55);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 18px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s ease;
+  }
+  .dialog-backdrop.open { opacity: 1; pointer-events: auto; }
+
+  .dialog {
+    background: var(--bg-surface);
+    border-radius: 18px;
+    max-width: 560px; width: 100%;
+    max-height: min(86vh, 720px);
+    display: flex; flex-direction: column;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(14px);
+    transition: transform .2s ease;
+  }
+  .dialog-backdrop.open .dialog { transform: translateY(0); }
+
+  .dialog-head {
+    padding: 22px 24px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; gap: 13px; align-items: flex-start;
+  }
+  .dialog-head-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    border-radius: 11px;
+    background: var(--bg-active);
+    color: var(--action);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dialog-head h2 { font-size: 18px; font-weight: 700; margin-bottom: 3px; }
+  .dialog-head p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  .dialog-body { padding: 18px 24px; overflow-y: auto; }
+  .dialog-body p { font-size: 13.5px; color: var(--text-secondary); line-height: 1.85; }
+  .dialog-body p + p { margin-top: 11px; }
+  .dialog-body strong { color: var(--text-primary); font-weight: 600; }
+
+  .dialog-foot {
+    padding: 16px 24px 22px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 10px;
+  }
+  .dialog-foot .btn { flex: 1; justify-content: center; padding: 12px; font-size: 15px; }
+  .dialog-accept {
+    background: var(--action);
+    border-color: var(--action);
+    color: #fff; font-weight: 700;
+  }
+  .dialog-accept:hover { background: var(--action-hover); border-color: var(--action-hover); color: #fff; }
+
+  body.dialog-open { overflow: hidden; }
+
+  /* ---------- Desktop ---------- */
+  @media (min-width: 1024px) {
+    body { padding-top: 0; height: 100vh; overflow: hidden; }
+    .mobile-header { display: none; }
 
     .sidebar {
-      width: 85%;
-      min-width: 280px;
-      max-width: 320px;
+      width: var(--sidebar-width);
+      transform: none;
+      box-shadow: none;
+      transition: none;
     }
+    #navClose { display: none; }
+    .sidebar-header { padding-block: 20px 18px; }
+    .scrim { display: none; }
 
-    .quick-launch {
-      grid-template-columns: repeat(2, 1fr);
-      max-width: 100%;
+    .app-main {
+      margin-inline-start: var(--sidebar-width);
+      height: 100vh;
+      min-height: 0;
+      overflow: hidden;
     }
+    .home { overflow-y: auto; flex: 1; padding: 30px 36px 34px; }
+    .home-head h1 { font-size: 30px; }
+    .tool-grid { gap: 16px; }
+  }
 
-    .tool-topbar {
-      height: 52px;
-      min-height: 52px;
-      padding: 0 12px;
-      gap: 8px;
-      flex-wrap: nowrap;
+  @media (min-width: 1440px) {
+    .home { padding-inline: 48px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      transition-duration: .01ms !important;
     }
-
-    .tool-topbar-url { display: none; }
-    .tool-topbar-icon { display: none; }
-    .tool-topbar-title { font-size: 14px; }
-    .tool-topbar-actions { gap: 4px; }
-
-    .topbar-btn {
-      padding: 8px 10px;
-      font-size: 12px;
-    }
-
-    .topbar-btn.desktop-only { display: none; }
-
-    .tool-frame-wrapper { height: 100vh; }
-    .tool-frame-wrapper.active { display: flex; height: 100vh; }
-    .tool-iframe { height: calc(100vh - 56px); }
+    .tool-card:hover { transform: none; }
   }
 </style>
 </head>
 <body>
 
-<div class="disclaimer-overlay" id="disclaimerOverlay">
-  <div class="disclaimer-modal">
-    <div style="text-align:center;font-size:36px;margin-bottom:12px;">⚠️</div>
-    <h2>גילוי נאות</h2>
-    <p class="dm-subtitle" id="disclaimerSubtitle"></p>
-    <div class="dm-content" id="disclaimerContent"></div>
-    <button class="dm-accept-btn" id="disclaimerAcceptBtn">קראתי ואני מאשר ✓</button>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true" focusable="false">
+  <symbol id="i-momentum" viewBox="0 0 24 24"><path d="M3 17.5l5.5-5.5 3.5 3.5 7-7"/><path d="M15 8.5h4v4"/><path d="M3 21h18"/></symbol>
+  <symbol id="i-scanner" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.75"/><path d="M15.4 15.4L20.5 20.5"/><path d="M8.3 12.6V9.4M10.6 12.6V7.6M12.9 12.6v-2"/></symbol>
+  <symbol id="i-journal" viewBox="0 0 24 24"><path d="M9 3.5h6v2.8H9z"/><path d="M15 4.9h2.3a1.7 1.7 0 011.7 1.7v12.2a1.7 1.7 0 01-1.7 1.7H6.7A1.7 1.7 0 015 18.8V6.6a1.7 1.7 0 011.7-1.7H9"/><path d="M8.6 11.6h6.8M8.6 15.3h4.2"/></symbol>
+  <symbol id="i-review" viewBox="0 0 24 24"><path d="M4 6.4A1.6 1.6 0 015.6 4.8h9.8A1.6 1.6 0 0117 6.4V17a2.2 2.2 0 002.2 2.2H6.2A2.2 2.2 0 014 17z"/><path d="M17 9h1.4A1.6 1.6 0 0120 10.6V17"/><path d="M7.2 8.6h6.6M7.2 12h6.6M7.2 15.4h4"/></symbol>
+  <symbol id="i-savings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 6"/><path d="M12 12h8.5"/></symbol>
+  <symbol id="i-calculator" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.2"/><path d="M8.3 7.2h7.4"/><path d="M9 11.6h.01M12 11.6h.01M15 11.6h.01M9 15.2h.01M12 15.2h.01M15 15.2h.01M9 18.4h.01M12 18.4h.01M15 18.4h.01"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4.5h5.5V10"/><path d="M19.5 4.5L12 12"/><path d="M18.5 13.8v4.4a1.8 1.8 0 01-1.8 1.8H5.8A1.8 1.8 0 014 18.2V7.3a1.8 1.8 0 011.8-1.8h4.4"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19.8 12a7.8 7.8 0 11-2.3-5.5"/><path d="M19.3 3.4v4.2h-4.2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 2.8v5.4c0 4.3-2.9 8.2-7 9.5-4.1-1.3-7-5.2-7-9.5V5.8z"/><path d="M12 9v4.2M12 16.2h.01"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">דלג לתוכן הראשי</a>
+
+<header class="mobile-header">
+  <button type="button" class="icon-btn" id="navToggle" aria-label="פתח תפריט כלים" aria-controls="sidebar" aria-expanded="false">
+    <svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg>
+  </button>
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">DS</span>
+    <span class="brand-name">Doron Tools</span>
   </div>
-</div>
+</header>
 
-<button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
-<button class="mobile-home-btn" id="mobileHomeBtn" onclick="goHome()">🏠</button>
-<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="scrim" id="scrim" hidden></div>
 
-<aside class="sidebar" id="sidebar">
+<aside class="sidebar" id="sidebar" aria-label="ניווט ראשי">
   <div class="sidebar-header">
-    <div class="logo-area">
-      <div class="logo-icon">DS</div>
-      <div class="logo-text">Doron Tools</div>
+    <div class="brand">
+      <span class="brand-mark lg" aria-hidden="true">DS</span>
+      <span class="brand-stack">
+        <span class="brand-name lg">Doron Tools</span>
+        <span class="brand-tagline">שוק הון ותכנון פיננסי</span>
+      </span>
     </div>
-    <div class="logo-subtitle">כלים פיננסיים מבוססי AI</div>
+    <button type="button" class="icon-btn" id="navClose" aria-label="סגור תפריט">
+      <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+    </button>
   </div>
 
-  <nav class="sidebar-nav">
-    <div class="nav-category">
-      <div class="nav-category-label">
-        <span class="dot" style="background: var(--accent-finance)"></span>
-        כלים פיננסיים
-      </div>
-
-      <div class="nav-item" data-category="finance" data-tool="financial-analyst" onclick="loadTool(this)">
-        <div class="nav-icon">🧭</div>
-        <span class="nav-label">Momentum Desk</span>
-        <span class="nav-badge">מניות וול סטריט</span>
-      </div>
-
-      <div class="nav-item" data-category="finance" data-tool="fundamental-pro" onclick="loadTool(this)">
-        <div class="nav-icon">📊</div>
-        <span class="nav-label">סורק פנדמנטלי Pro</span>
-        <span class="nav-badge">סריקת מניות</span>
-      </div>
-
-      <div class="nav-item" data-category="finance" data-tool="tradesnap" onclick="loadTool(this)">
-        <div class="nav-icon">📝</div>
-        <span class="nav-label">TradeSnap</span>
-        <span class="nav-badge">תיעוד עסקאות</span>
-      </div>
-
-      <div class="nav-item" data-category="finance" data-tool="calculator" onclick="loadTool(this)">
-        <div class="nav-icon">🧮</div>
-        <span class="nav-label">מחשבון פיננסי</span>
-        <span class="nav-badge">חישובים</span>
-      </div>
-
-      <div class="nav-item" data-category="finance" data-tool="savings-dashboard" onclick="loadTool(this)">
-        <div class="nav-icon">📈</div>
-        <span class="nav-label">מפת החיסכון</span>
-        <span class="nav-badge">פנסיה / גמל</span>
-      </div>
-    </div>
-
-    <div class="nav-category">
-      <div class="nav-category-label">
-        <span class="dot" style="background: var(--accent-market)"></span>
-        שוק ההון
-      </div>
-
-      <div class="nav-item" data-category="market" data-tool="wallstreet-il" onclick="loadTool(this)">
-        <div class="nav-icon">🇺🇸</div>
-        <span class="nav-label">סקירות וול סטריט</span>
-        <span class="nav-badge">הכנה ועדכונים</span>
-      </div>
-    </div>
-  </nav>
+  <nav class="sidebar-nav" id="sidebarNav" aria-label="כלים"></nav>
 
   <div class="sidebar-footer">
-    <a href="https://github.com/doronsh170" target="_blank" rel="noopener">GitHub</a>
+    <strong>דורון שרייבמן</strong>
+    <span id="sidebarMeta"></span>
   </div>
 </aside>
 
-<main class="main-content">
-  <div class="welcome-screen" id="welcomeScreen">
-    <div class="welcome-icon">🚀</div>
-    <h1 class="welcome-title">ברוכים הבאים</h1>
-    <p class="welcome-desc">
-      כל הכלים הפיננסיים שלך, במקום אחד.
-      בחר כלי להתחיל.
-    </p>
+<main class="app-main" id="main">
+  <div class="home" id="home">
+    <div class="home-inner">
+      <header class="home-head">
+        <h1>Doron Tools</h1>
+        <p>מערכת כלים לניתוח שוק ההון, מעקב מסחר ותכנון פיננסי ופנסיוני. בחירת כלי מציגה גילוי נאות ייעודי לפני הפתיחה.</p>
+      </header>
 
-    <div class="quick-launch">
-      <div class="quick-card" data-cat="finance" onclick="quickLaunch('financial-analyst')">
-        <div class="quick-card-icon">🧭</div>
-        <div class="quick-card-title">Momentum Desk</div>
-        <div class="quick-card-desc">מפת סקטורים ותתי־סקטורים למניות וול סטריט</div>
-      </div>
+      <div id="toolGroups"></div>
 
-      <div class="quick-card" data-cat="finance" onclick="quickLaunch('fundamental-pro')">
-        <div class="quick-card-icon">📊</div>
-        <div class="quick-card-title">סורק פנדמנטלי Pro</div>
-        <div class="quick-card-desc">סריקת מניות ו-ETF</div>
-      </div>
-
-      <div class="quick-card" data-cat="finance" onclick="quickLaunch('tradesnap')">
-        <div class="quick-card-icon">📝</div>
-        <div class="quick-card-title">TradeSnap</div>
-        <div class="quick-card-desc">תיעוד עסקאות</div>
-      </div>
-
-      <div class="quick-card" data-cat="finance" onclick="quickLaunch('calculator')">
-        <div class="quick-card-icon">🧮</div>
-        <div class="quick-card-title">מחשבון פיננסי</div>
-        <div class="quick-card-desc">חישובים פיננסיים</div>
-      </div>
-
-      <div class="quick-card" data-cat="finance" onclick="quickLaunch('savings-dashboard')">
-        <div class="quick-card-icon">📈</div>
-        <div class="quick-card-title">מפת החיסכון</div>
-        <div class="quick-card-desc">כל החיסכון, החשיפות והקופות במקום אחד</div>
-      </div>
-
-      <div class="quick-card" data-cat="market" onclick="quickLaunch('wallstreet-il')">
-        <div class="quick-card-icon">🇺🇸</div>
-        <div class="quick-card-title">סקירות וול סטריט</div>
-        <div class="quick-card-desc">סקירות שוק בעברית, הכנה למסחר, עדכון ביניים, סיכום יום וסיכום שבועי</div>
-      </div>
-    </div>
-
-    <p style="margin-top: 40px; font-size: 13px; color: var(--text-muted);">Doron Tools © 2026<br>דורון שרייבמן</p>
-  </div>
-
-  <div class="tool-frame-wrapper" id="toolFrame">
-    <div class="tool-topbar">
-      <button class="topbar-btn home-btn" onclick="goHome()">← ראשי</button>
-      <span class="tool-topbar-icon" id="toolIcon"></span>
-      <span class="tool-topbar-title" id="toolTitle"></span>
-      <div class="tool-topbar-actions">
-        <button class="topbar-btn desktop-only" onclick="openExternal()">פתח בחלון חדש ↗</button>
-        <button class="topbar-btn" onclick="reloadFrame()">↻</button>
-      </div>
-      <span class="tool-topbar-url" id="toolUrl"></span>
-    </div>
-    <iframe class="tool-iframe" id="toolIframe" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"></iframe>
-    <div class="placeholder-frame" id="placeholderFrame">
-      <div class="icon">⚙️</div>
-      <p>
-        הכלי הזה עדיין לא מוגדר.<br>
-        ערוך את הקובץ והוסף את ה-URL של הכלי ב-<code>TOOLS_CONFIG</code>
-      </p>
+      <footer class="home-foot">
+        <p class="legal">אין באמור ייעוץ השקעות, שיווק השקעות, ייעוץ פנסיוני או ייעוץ מס, ואין בו המלצה לביצוע פעולה כלשהי בניירות ערך או במוצרי חיסכון. כל שימוש הוא באחריות המשתמש בלבד. ט.ל.ח.</p>
+        <p id="homeMeta"></p>
+      </footer>
     </div>
   </div>
+
+  <section class="tool-view" id="toolView" aria-label="תצוגת כלי">
+    <div class="tool-bar">
+      <button type="button" class="btn btn-primary" id="backBtn">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-back"></use></svg>
+        <span>כל הכלים</span>
+      </button>
+      <span class="tool-bar-id">
+        <svg class="icon tool-bar-icon" aria-hidden="true"><use id="toolBarIconUse" href="#i-momentum"></use></svg>
+        <span class="tool-bar-title" id="toolBarTitle"></span>
+      </span>
+      <span class="tool-bar-actions">
+        <button type="button" class="btn" id="externalBtn">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#i-external"></use></svg>
+          <span>פתח בחלון חדש</span>
+        </button>
+        <button type="button" class="btn" id="reloadBtn" aria-label="רענן את הכלי">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#i-refresh"></use></svg>
+        </button>
+      </span>
+    </div>
+    <iframe
+      class="tool-frame"
+      id="toolFrame"
+      title="תצוגת הכלי הנבחר"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allow="clipboard-write; fullscreen"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-downloads allow-storage-access-by-user-activation"
+      src="about:blank"></iframe>
+  </section>
 </main>
 
+<div class="dialog-backdrop" id="dialogBackdrop" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle" aria-describedby="dialogDesc" id="dialog">
+    <div class="dialog-head">
+      <span class="dialog-head-icon" aria-hidden="true"><svg class="icon icon-lg"><use href="#i-shield"></use></svg></span>
+      <span>
+        <h2 id="dialogTitle">גילוי נאות</h2>
+        <p id="dialogDesc"></p>
+      </span>
+    </div>
+    <div class="dialog-body" id="dialogBody" tabindex="0"></div>
+    <div class="dialog-foot">
+      <button type="button" class="btn" id="dialogCancel">חזרה</button>
+      <button type="button" class="btn dialog-accept" id="dialogAccept">קראתי ואני מאשר</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  const TOOLS_CONFIG = {
-    'financial-analyst': {
-      name: 'Wall Street-View',
-      icon: '🧭',
-      url: 'https://wallstreet-view.netlify.app/'
+(function () {
+  'use strict';
+
+  var SITE = { version: '2.0', updated: 'ספטמבר 2026' };
+
+  var CATEGORIES = [
+    { id: 'market',   label: 'שוק ההון ומסחר',        color: 'var(--accent-market)',   strong: 'var(--accent-market-strong)',   tint: 'var(--accent-market-tint)' },
+    { id: 'planning', label: 'תכנון פיננסי ופנסיוני', color: 'var(--accent-planning)', strong: 'var(--accent-planning-strong)', tint: 'var(--accent-planning-tint)' }
+  ];
+
+  var TOOLS = [
+    {
+      id: 'momentum-desk',
+      name: 'Momentum Desk',
+      meta: 'מיפוי סקטורים',
+      desc: 'מפת סקטורים ותתי־סקטורים למניות וול סטריט, לניתוח מומנטום.',
+      cat: 'market',
+      icon: 'i-momentum',
+      url: 'https://wallstreet-view.netlify.app/',
+      disclaimer: {
+        subtitle: 'יש לקרוא ולאשר לפני הכניסה ל־Momentum Desk',
+        html:
+          '<p><strong>מטרת הכלי:</strong> Momentum Desk נועד למיפוי מניות וול סטריט לפי סקטורים, תתי־סקטורים וקבוצות השוואה רלוונטיות למסחר מומנטום.</p>' +
+          '<p><strong>אין ייעוץ השקעות:</strong> המידע באתר מוצג לצורכי מידע, למידה וסינון ראשוני בלבד. הוא אינו מהווה ייעוץ השקעות, שיווק השקעות, ניתוח השקעות אישי או המלצה לקנייה, מכירה או החזקה של ניירות ערך.</p>' +
+          '<p><strong>דיוק וסיווגים:</strong> החלוקה לקבוצות, הסקטורים, התמות והקישורים החיצוניים מבוססים על עריכה ידנית ומקורות פומביים. ייתכנו טעויות, סיווגים לא מדויקים, קישורים שאינם פעילים, נתונים חסרים או מידע שאינו מעודכן.</p>' +
+          '<p><strong>שימוש במסחר:</strong> הכלי אינו מחליף בדיקה עצמאית של גרף, מחזורי מסחר, נזילות, חדשות, דוחות, סיכונים ומצב שוק. אין להסתמך עליו כמקור יחיד לקבלת החלטות מסחר או השקעה.</p>' +
+          '<p><strong>אחריות:</strong> כל פעולה בניירות ערך היא באחריות המשתמש בלבד. ט.ל.ח.</p>'
+      }
     },
-    'fundamental-pro': {
-      name: 'סורק פנדמנטלי Pro',
-      icon: '📊',
-      url: 'https://fundamental-pro.netlify.app/'
+    {
+      id: 'fundamental-scanner',
+      name: 'סורק פונדמנטלי',
+      meta: 'סריקת מניות ו־ETF',
+      desc: 'סריקה וסינון של מניות ותעודות סל לפי נתונים פונדמנטליים.',
+      cat: 'market',
+      icon: 'i-scanner',
+      url: 'https://fundamental-pro.netlify.app/',
+      disclaimer: {
+        subtitle: 'יש לקרוא ולאשר לפני השימוש בסורק',
+        html:
+          '<p><strong>מקור הנתונים:</strong> הנתונים מבוססים על מקורות חיצוניים (Finnhub, Google) ועלולים להיות חלקיים, מאוחרים או לא מדויקים. הניתוח מופק באמצעות בינה מלאכותית (AI).</p>' +
+          '<p><strong>אין ייעוץ השקעות:</strong> התוכן אינו מהווה ייעוץ, שיווק השקעות, או המלצה לקנייה או מכירה של ניירות ערך, כהגדרתם בחוק הסדרת העיסוק בייעוץ השקעות, התשנ"ה-1995.</p>' +
+          '<p><strong>אחריות:</strong> כל החלטת השקעה היא באחריות המשתמש בלבד. אין להסתמך על תוכן זה כמקור יחיד לקבלת החלטות. ט.ל.ח.</p>'
+      }
     },
-    'tradesnap': {
+    {
+      id: 'tradesnap',
       name: 'TradeSnap',
-      icon: '📝',
-      url: 'https://doronsh170.github.io/tradesnap/'
+      meta: 'יומן עסקאות',
+      desc: 'תיעוד ומעקב אישי אחר עסקאות, לסיכום וניתוח בדיעבד.',
+      cat: 'market',
+      icon: 'i-journal',
+      url: 'https://doronsh170.github.io/tradesnap/',
+      disclaimer: {
+        subtitle: 'יש לקרוא ולאשר לפני הכניסה ל־TradeSnap',
+        html:
+          '<p><strong>מטרת הכלי:</strong> TradeSnap נועד לתיעוד ומעקב אישי אחר עסקאות שהמשתמש מבצע, לצורכי סיכום, למידה וניתוח בדיעבד.</p>' +
+          '<p><strong>אין ייעוץ השקעות:</strong> הכלי אינו מייצר המלצות ואינו מהווה ייעוץ השקעות, שיווק השקעות או המלצה לקנייה, מכירה או החזקה של ניירות ערך, כהגדרתם בחוק הסדרת העיסוק בייעוץ השקעות, התשנ"ה-1995.</p>' +
+          '<p><strong>אינו מסמך חשבונאי או מס:</strong> סיכומי רווח והפסד, אחוזי תשואה וכל חישוב אחר בכלי נועדו למעקב אישי בלבד. הם אינם מהווים דוח חשבונאי, אישור בנקאי או מסמך לצורכי דיווח לרשות המסים.</p>' +
+          '<p><strong>דיוק הנתונים:</strong> הנתונים מוזנים על ידי המשתמש. באחריותו לוודא את נכונותם ואת גיבויים.</p>' +
+          '<p><strong>אחריות:</strong> כל פעולה בניירות ערך היא באחריות המשתמש בלבד. ט.ל.ח.</p>'
+      }
     },
-    'calculator': {
-      name: 'מחשבון פיננסי',
-      icon: '🧮',
-      url: 'https://doronsh170.github.io/doron-calculator/'
-    },
-    'savings-dashboard': {
-      name: 'מפת החיסכון',
-      icon: '📈',
-      url: 'https://my-saving-maps.netlify.app/'
-    },
-    'wallstreet-il': {
+    {
+      id: 'wallstreet-reviews',
       name: 'סקירות וול סטריט',
-      icon: '🇺🇸',
-      url: 'https://doronsh170.github.io/wallstreet-reviews-v2/'
+      meta: 'סקירות שוק',
+      desc: 'הכנה למסחר, עדכון ביניים, סיכום יומי וסיכום שבועי.',
+      cat: 'market',
+      icon: 'i-review',
+      url: 'https://doronsh170.github.io/wallstreet-reviews-v2/',
+      disclaimer: {
+        subtitle: 'יש לקרוא ולאשר לפני הכניסה לסקירות',
+        html:
+          '<p><strong>מקור התוכן:</strong> הסקירות באתר זה מופקות באופן אוטומטי באמצעות בינה מלאכותית (AI) על בסיס נתוני שוק פומביים. התוכן לא נכתב ולא נבדק על ידי אדם.</p>' +
+          '<p><strong>אין ייעוץ השקעות:</strong> התוכן מוצג למטרות מידע בלבד ואינו מהווה ייעוץ, שיווק השקעות, או המלצה לקנייה או מכירה של ניירות ערך, כהגדרתם בחוק הסדרת העיסוק בייעוץ השקעות, התשנ"ה-1995.</p>' +
+          '<p><strong>דיוק ואמינות:</strong> ייתכנו אי-דיוקים, השמטות או שגיאות בנתונים ובפרשנות. אין להסתמך על תוכן זה כמקור יחיד לקבלת החלטות.</p>' +
+          '<p><strong>אחריות:</strong> כל החלטת השקעה היא באחריות המשתמש בלבד. ט.ל.ח.</p>'
+      }
     },
+    {
+      id: 'savings-map',
+      name: 'מפת החיסכון',
+      meta: 'פנסיה, גמל והשתלמות',
+      desc: 'ריכוז חשיפות בקופות פנסיה, גמל והשתלמות והשוואת דמי ניהול.',
+      cat: 'planning',
+      icon: 'i-savings',
+      url: 'https://my-saving-maps.netlify.app/',
+      disclaimer: {
+        subtitle: 'יש לקרוא ולאשר לפני הכניסה למפת החיסכון',
+        html:
+          '<p><strong>מטרת הכלי:</strong> מפת החיסכון נועדה לרכז ולהמחיש חשיפות של מוצרי חיסכון פנסיוני ופיננסי על בסיס נתונים ציבוריים ונתונים שהמשתמש מזין ידנית.</p>' +
+          '<p><strong>אין ייעוץ או המלצה:</strong> המידע המוצג אינו מהווה ייעוץ השקעות, שיווק השקעות, ייעוץ פנסיוני, ייעוץ מס או המלצה לביצוע פעולה כלשהי.</p>' +
+          '<p><strong>מקור הנתונים:</strong> הנתונים מבוססים על קובצי מידע ציבוריים של רשות שוק ההון ומאגרי גמל נט, פנסיה נט וביטוח נט. ייתכנו פערי עדכון, שגיאות, אי דיוקים או נתונים חסרים.</p>' +
+          '<p><strong>פרטיות:</strong> היתרות ודמי הניהול שהמשתמש מזין נשמרים בדפדפן בלבד. הם אינם נשמרים בשרת ואינם משויכים לפרטים אישיים.</p>' +
+          '<p><strong>סימולציות:</strong> כל סימולציה המבוססת על תשואות עבר נועדה להמחשה בלבד. ביצועי עבר אינם מנבאים תשואה עתידית ואינם מהווים תחזית.</p>' +
+          '<p><strong>אחריות המשתמש:</strong> השימוש בכלי ובמידע המוצג בו הוא באחריות המשתמש בלבד. לפני כל פעולה פיננסית או פנסיונית יש להיוועץ בבעל רישיון מתאים. ט.ל.ח.</p>'
+      }
+    },
+    {
+      id: 'financial-calculator',
+      name: 'מחשבון פיננסי',
+      meta: 'חישובי תשואה וריבית',
+      desc: 'חישובי צבירה, ריבית דריבית ותרחישי חיסכון לאורך זמן.',
+      cat: 'planning',
+      icon: 'i-calculator',
+      url: 'https://doronsh170.github.io/doron-calculator/',
+      disclaimer: {
+        subtitle: 'יש לקרוא ולאשר לפני השימוש במחשבון',
+        html:
+          '<p>המחשבון נועד למטרות הדגמה וחינוך פיננסי בלבד. התוצאות המוצגות מתבססות על נתוני תשואה היסטוריים בלבד (1995-2024) ואינן מהוות תחזית, הבטחה או התחייבות לתשואה עתידית כלשהי. ביצועי עבר אינם ערובה לביצועים עתידיים.</p>' +
+          '<p>החישובים אינם מביאים בחשבון את מצבו הפיננסי האישי של המשתמש, מטרות ההשקעה, אופק ההשקעה, רמת הסיכון המתאימה לו, חבות המס הרלוונטית, עלויות עסקה, או כל גורם אישי אחר.</p>' +
+          '<p>אין לראות בתוצאות המחשבון משום ייעוץ השקעות, ייעוץ פנסיוני, ייעוץ מס או כל ייעוץ פיננסי אחר. השימוש במידע המוצג הינו באחריות המשתמש בלבד. לפני כל החלטת השקעה מומלץ להתייעץ עם יועץ השקעות מורשה בעל רישיון כדין. ט.ל.ח.</p>'
+      }
+    }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var catOf = function (id) {
+    for (var i = 0; i < CATEGORIES.length; i++) { if (CATEGORIES[i].id === id) return CATEGORIES[i]; }
+    return CATEGORIES[0];
+  };
+  var toolOf = function (id) {
+    for (var i = 0; i < TOOLS.length; i++) { if (TOOLS[i].id === id) return TOOLS[i]; }
+    return null;
+  };
+  var svgIcon = function (name, cls) {
+    return '<svg class="' + cls + '" aria-hidden="true"><use href="#' + name + '"></use></svg>';
+  };
+  var applyCatVars = function (el, cat) {
+    el.style.setProperty('--cat-color', cat.color);
+    el.style.setProperty('--cat-strong', cat.strong);
+    el.style.setProperty('--cat-tint', cat.tint);
   };
 
-  let currentToolUrl = '';
-  let pendingToolAction = null;
+  /* ---------- Render ---------- */
+  function render() {
+    var nav = $('sidebarNav');
+    var groups = $('toolGroups');
+    var navHtml = '';
+    var groupsHtml = '';
 
-  const DISCLAIMER_CONTENT = {
-    'financial-analyst': {
-      subtitle: 'יש לקרוא ולאשר לפני הכניסה ל-Momentum Desk',
-      html: `
-        <p><strong>מטרת הכלי:</strong> Momentum Desk נועד למיפוי מניות וול סטריט לפי סקטורים, תתי־סקטורים וקבוצות השוואה רלוונטיות למסחר מומנטום.</p>
-        <p><strong>אין ייעוץ השקעות:</strong> המידע באתר מוצג לצורכי מידע, למידה וסינון ראשוני בלבד. הוא אינו מהווה ייעוץ השקעות, שיווק השקעות, ניתוח השקעות אישי או המלצה לקנייה, מכירה או החזקה של ניירות ערך.</p>
-        <p><strong>דיוק וסיווגים:</strong> החלוקה לקבוצות, הסקטורים, התמות והקישורים החיצוניים מבוססים על עריכה ידנית ומקורות פומביים. ייתכנו טעויות, סיווגים לא מדויקים, קישורים שאינם פעילים, נתונים חסרים או מידע שאינו מעודכן.</p>
-        <p><strong>שימוש במסחר:</strong> הכלי אינו מחליף בדיקה עצמאית של גרף, מחזורי מסחר, נזילות, חדשות, דוחות, סיכונים ומצב שוק. אין להסתמך עליו כמקור יחיד לקבלת החלטות מסחר או השקעה.</p>
-        <p><strong>אחריות:</strong> כל פעולה בניירות ערך היא באחריות המשתמש בלבד. ט.ל.ח.</p>
-      `
-    },
-    'wallstreet-il': {
-      subtitle: 'יש לקרוא ולאשר לפני הכניסה לסקירות',
-      html: `
-        <p><strong>מקור התוכן:</strong> הסקירות באתר זה מופקות באופן אוטומטי באמצעות בינה מלאכותית (AI) על בסיס נתוני שוק פומביים. התוכן לא נכתב ולא נבדק על ידי אדם.</p>
-        <p><strong>אין ייעוץ השקעות:</strong> התוכן מוצג למטרות מידע בלבד ואינו מהווה ייעוץ, שיווק השקעות, או המלצה לקנייה או מכירה של ניירות ערך, כהגדרתם בחוק הסדרת העיסוק בייעוץ השקעות, התשנ"ה-1995.</p>
-        <p><strong>דיוק ואמינות:</strong> ייתכנו אי-דיוקים, השמטות או שגיאות בנתונים ובפרשנות. אין להסתמך על תוכן זה כמקור יחיד לקבלת החלטות.</p>
-        <p><strong>אחריות:</strong> כל החלטת השקעה היא באחריות המשתמש בלבד. ט.ל.ח.</p>
-      `
-    },
-    'fundamental-pro': {
-      subtitle: 'יש לקרוא ולאשר לפני השימוש בסורק',
-      html: `
-        <p><strong>מקור הנתונים:</strong> הנתונים מבוססים על מקורות חיצוניים (Finnhub, Google) ועלולים להיות חלקיים, מאוחרים או לא מדויקים. הניתוח מופק באמצעות בינה מלאכותית (AI).</p>
-        <p><strong>אין ייעוץ השקעות:</strong> התוכן אינו מהווה ייעוץ, שיווק השקעות, או המלצה לקנייה או מכירה של ניירות ערך, כהגדרתם בחוק הסדרת העיסוק בייעוץ השקעות, התשנ"ה-1995.</p>
-        <p><strong>אחריות:</strong> כל החלטת השקעה היא באחריות המשתמש בלבד. אין להסתמך על תוכן זה כמקור יחיד לקבלת החלטות. ט.ל.ח.</p>
-      `
-    },
-    'savings-dashboard': {
-      subtitle: 'יש לקרוא ולאשר לפני הכניסה למפת החיסכון',
-      html: `
-        <p><strong>מטרת הכלי:</strong> מפת החיסכון נועדה לרכז ולהמחיש חשיפות של מוצרי חיסכון פנסיוני ופיננסי על בסיס נתונים ציבוריים ונתונים שהמשתמש מזין ידנית.</p>
-        <p><strong>אין ייעוץ או המלצה:</strong> המידע המוצג אינו מהווה ייעוץ השקעות, שיווק השקעות, ייעוץ פנסיוני, ייעוץ מס או המלצה לביצוע פעולה כלשהי.</p>
-        <p><strong>מקור הנתונים:</strong> הנתונים מבוססים על קובצי מידע ציבוריים של רשות שוק ההון ומאגרי גמל נט, פנסיה נט וביטוח נט. ייתכנו פערי עדכון, שגיאות, אי דיוקים או נתונים חסרים.</p>
-        <p><strong>פרטיות:</strong> היתרות ודמי הניהול שהמשתמש מזין נשמרים בדפדפן בלבד. הם אינם נשמרים בשרת ואינם משויכים לפרטים אישיים.</p>
-        <p><strong>סימולציות:</strong> כל סימולציה המבוססת על תשואות עבר נועדה להמחשה בלבד. ביצועי עבר אינם מנבאים תשואה עתידית ואינם מהווים תחזית.</p>
-        <p><strong>אחריות המשתמש:</strong> השימוש בכלי ובמידע המוצג בו הוא באחריות המשתמש בלבד. לפני כל פעולה פיננסית או פנסיונית יש להיוועץ בבעל רישיון מתאים. ט.ל.ח.</p>
-      `
-    },
-    'calculator': {
-      subtitle: 'יש לקרוא ולאשר לפני השימוש במחשבון',
-      html: `
-        <p>המחשבון נועד למטרות הדגמה וחינוך פיננסי בלבד. התוצאות המוצגות מתבססות על נתוני תשואה היסטוריים בלבד (1995-2024) ואינן מהוות תחזית, הבטחה או התחייבות לתשואה עתידית כלשהי. ביצועי עבר אינם ערובה לביצועים עתידיים.</p>
-        <p>החישובים אינם מביאים בחשבון את מצבו הפיננסי האישי של המשתמש, מטרות ההשקעה, אופק ההשקעה, רמת הסיכון המתאימה לו, חבות המס הרלוונטית, עלויות עסקה, או כל גורם אישי אחר.</p>
-        <p>אין לראות בתוצאות המחשבון משום ייעוץ השקעות, ייעוץ פנסיוני, ייעוץ מס או כל ייעוץ פיננסי אחר. השימוש במידע המוצג הינו באחריות המשתמש בלבד. לפני כל החלטת השקעה מומלץ להתייעץ עם יועץ השקעות מורשה בעל רישיון כדין. ט.ל.ח.</p>
-      `
-    }
+    CATEGORIES.forEach(function (cat) {
+      var items = TOOLS.filter(function (t) { return t.cat === cat.id; });
+      if (!items.length) return;
+
+      navHtml +=
+        '<div class="nav-group" role="group" aria-label="' + cat.label + '" style="--cat-color:' + cat.color + ';--cat-tint:' + cat.tint + '">' +
+          '<div class="nav-group-label" aria-hidden="true"><span class="dot" style="background:' + cat.color + '"></span>' + cat.label + '</div>' +
+          items.map(function (t) {
+            return '<button type="button" class="nav-item" data-tool="' + t.id + '">' +
+              '<span class="nav-item-icon">' + svgIcon(t.icon, 'icon') + '</span>' +
+              '<span class="nav-item-text">' +
+                '<span class="nav-item-name">' + t.name + '</span><br>' +
+                '<span class="nav-item-meta">' + t.meta + '</span>' +
+              '</span>' +
+            '</button>';
+          }).join('') +
+        '</div>';
+
+      groupsHtml +=
+        '<section class="tool-group" style="--cat-color:' + cat.color + ';--cat-strong:' + cat.strong + ';--cat-tint:' + cat.tint + '">' +
+          '<div class="group-head">' +
+            '<h2><span class="dot" style="background:' + cat.color + '"></span>' + cat.label + '</h2>' +
+            '<span class="group-count">' + items.length + ' כלים</span>' +
+          '</div>' +
+          '<div class="tool-grid">' +
+            items.map(function (t) {
+              return '<button type="button" class="tool-card" data-tool="' + t.id + '">' +
+                '<span class="tool-card-head">' +
+                  '<span class="tool-card-icon">' + svgIcon(t.icon, 'icon icon-lg') + '</span>' +
+                  '<span class="tool-card-title">' + t.name + '</span>' +
+                '</span>' +
+                '<span class="tool-card-desc">' + t.desc + '</span>' +
+                '<span class="tool-card-cta">פתיחת הכלי' + svgIcon('i-arrow', 'icon icon-sm') + '</span>' +
+              '</button>';
+            }).join('') +
+          '</div>' +
+        '</section>';
+    });
+
+    nav.innerHTML = navHtml;
+    groups.innerHTML = groupsHtml;
+
+    var year = new Date().getFullYear();
+    $('homeMeta').textContent = 'Doron Tools · דורון שרייבמן · גרסה ' + SITE.version + ' · עודכן ' + SITE.updated + ' · © ' + year;
+    $('sidebarMeta').textContent = 'גרסה ' + SITE.version + ' · עודכן ' + SITE.updated;
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-tool]'), function (el) {
+      var t = toolOf(el.dataset.tool);
+      if (t) applyCatVars(el, catOf(t.cat));
+      el.addEventListener('click', function () { requestTool(t.id); });
+    });
+  }
+
+  /* ---------- Sidebar ---------- */
+  var isDesktop = function () { return window.matchMedia('(min-width: 1024px)').matches; };
+
+  function setSidebar(open) {
+    if (isDesktop()) return;
+    $('sidebar').classList.toggle('open', open);
+    $('scrim').classList.toggle('open', open);
+    $('scrim').hidden = !open;
+    $('navToggle').setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) $('navClose').focus(); else $('navToggle').focus();
+  }
+
+  $('navToggle').addEventListener('click', function () { setSidebar(true); });
+  $('navClose').addEventListener('click', function () { setSidebar(false); });
+  $('scrim').addEventListener('click', function () { setSidebar(false); });
+
+  /* ---------- Disclaimer dialog ---------- */
+  var lastFocused = null;
+  var pending = null;
+  var pendingId = null;
+
+  var accepted = function (id) {
+    try { return sessionStorage.getItem('dt_disclaimer_' + id) === '1'; } catch (e) { return false; }
+  };
+  var markAccepted = function (id) {
+    try { sessionStorage.setItem('dt_disclaimer_' + id, '1'); } catch (e) { /* private mode */ }
   };
 
-  function needsDisclaimer(toolId) {
-    return toolId in DISCLAIMER_CONTENT && sessionStorage.getItem('disclaimer_' + toolId) !== '1';
+  function openDialog(tool, onAccept) {
+    pending = onAccept;
+    lastFocused = document.activeElement;
+    $('dialogDesc').textContent = tool.disclaimer.subtitle;
+    $('dialogBody').innerHTML = tool.disclaimer.html;
+    $('dialogBody').scrollTop = 0;
+    $('dialogBackdrop').hidden = false;
+    document.body.classList.add('dialog-open');
+    requestAnimationFrame(function () {
+      $('dialogBackdrop').classList.add('open');
+      $('dialogAccept').focus();
+    });
   }
 
-  function showDisclaimer(toolId, callback) {
-    const content = DISCLAIMER_CONTENT[toolId];
-    if (!content) return;
-    document.getElementById('disclaimerSubtitle').textContent = content.subtitle;
-    document.getElementById('disclaimerContent').innerHTML = content.html;
-    document.getElementById('disclaimerOverlay').classList.add('visible');
-    pendingToolAction = { toolId, callback };
+  function closeDialog() {
+    pending = null;
+    pendingId = null;
+    $('dialogBackdrop').classList.remove('open');
+    document.body.classList.remove('dialog-open');
+    window.setTimeout(function () { $('dialogBackdrop').hidden = true; }, 200);
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
   }
 
-  document.getElementById('disclaimerAcceptBtn').addEventListener('click', function() {
-    document.getElementById('disclaimerOverlay').classList.remove('visible');
-    if (pendingToolAction) {
-      sessionStorage.setItem('disclaimer_' + pendingToolAction.toolId, '1');
-      pendingToolAction.callback();
-      pendingToolAction = null;
-    }
+  var dialogOpen = function () { return !$('dialogBackdrop').hidden; };
+
+  $('dialogCancel').addEventListener('click', closeDialog);
+  $('dialogBackdrop').addEventListener('click', function (e) { if (e.target === this) closeDialog(); });
+
+  $('dialogAccept').addEventListener('click', function () {
+    var run = pending;
+    if (pendingId) markAccepted(pendingId);
+    pending = null;
+    pendingId = null;
+    $('dialogBackdrop').classList.remove('open');
+    document.body.classList.remove('dialog-open');
+    $('dialogBackdrop').hidden = true;
+    if (run) run();
   });
 
-  document.getElementById('disclaimerOverlay').addEventListener('click', function(e) {
-    if (e.target === this) return;
+  /* Focus trap */
+  $('dialog').addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return;
+    var f = this.querySelectorAll('button, [tabindex="0"]');
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 
-  function isMobile() {
-    return window.innerWidth <= 768;
+  /* ---------- Tool launch ---------- */
+  var currentUrl = '';
+
+  function requestTool(id) {
+    var tool = toolOf(id);
+    if (!tool || !tool.url) return;
+    setSidebar(false);
+
+    if (tool.disclaimer && !accepted(id)) {
+      pendingId = id;
+      openDialog(tool, function () { launch(tool); });
+      return;
+    }
+    launch(tool);
   }
 
-  function loadTool(el) {
-    const toolId = el.dataset.tool;
-    const config = TOOLS_CONFIG[toolId];
-    if (!config || !config.url) return;
-
-    if (needsDisclaimer(toolId)) {
-      if (document.getElementById('sidebar').classList.contains('open')) toggleSidebar();
-      showDisclaimer(toolId, function() { loadTool(el); });
-      return;
+  function openTab(url) {
+    // Note: passing 'noopener' in the feature string makes window.open return
+    // null unconditionally, which is indistinguishable from a blocked popup.
+    // Open without it, then sever the opener link manually.
+    var w = window.open(url, '_blank');
+    if (w) {
+      try { w.opener = null; } catch (e) { /* cross-origin */ }
+      return true;
     }
-
-    if (isMobile()) {
-      if (document.getElementById('sidebar').classList.contains('open')) toggleSidebar();
-      window.location.href = config.url;
-      return;
-    }
-
-    if (document.getElementById('sidebar').classList.contains('open')) toggleSidebar();
-    document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
-    el.classList.add('active');
-
-    document.getElementById('welcomeScreen').style.display = 'none';
-    document.getElementById('toolFrame').classList.add('active');
-
-    document.getElementById('toolIcon').textContent = config.icon;
-    document.getElementById('toolTitle').textContent = config.name;
-    document.getElementById('toolUrl').textContent = config.url || 'לא הוגדר';
-
-    const iframe = document.getElementById('toolIframe');
-    const placeholder = document.getElementById('placeholderFrame');
-
-    iframe.style.display = 'block';
-    placeholder.style.display = 'none';
-    iframe.src = config.url;
-    currentToolUrl = config.url;
+    // Popup genuinely blocked — never leave the tap doing nothing.
+    window.location.href = url;
+    return false;
   }
 
-  function quickLaunch(toolId) {
-    const config = TOOLS_CONFIG[toolId];
-    if (!config || !config.url) return;
-
-    if (needsDisclaimer(toolId)) {
-      showDisclaimer(toolId, function() { quickLaunch(toolId); });
+  function launch(tool) {
+    if (!isDesktop()) {
+      openTab(tool.url);
       return;
     }
+    var cat = catOf(tool.cat);
+    applyCatVars($('toolView'), cat);
 
-    if (isMobile()) {
-      window.location.href = config.url;
-      return;
-    }
+    Array.prototype.forEach.call(document.querySelectorAll('.nav-item'), function (n) {
+      n.setAttribute('aria-current', n.dataset.tool === tool.id ? 'true' : 'false');
+    });
 
-    const el = document.querySelector('[data-tool="' + toolId + '"]');
-    if (el) loadTool(el);
+    $('toolBarIconUse').setAttribute('href', '#' + tool.icon);
+    $('toolBarTitle').textContent = tool.name;
+    $('toolFrame').title = tool.name;
+    $('toolFrame').src = tool.url;
+    currentUrl = tool.url;
+
+    $('home').style.display = 'none';
+    $('toolView').classList.add('active');
+    document.title = tool.name + ' | Doron Tools';
+    $('backBtn').focus();
   }
 
   function goHome() {
-    document.getElementById('welcomeScreen').style.display = 'flex';
-    document.getElementById('toolFrame').classList.remove('active');
-    document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
-    document.getElementById('toolIframe').src = '';
-    document.getElementById('mobileHomeBtn').classList.remove('visible');
+    $('toolView').classList.remove('active');
+    $('home').style.display = '';
+    $('toolFrame').src = 'about:blank';
+    currentUrl = '';
+    Array.prototype.forEach.call(document.querySelectorAll('.nav-item'), function (n) {
+      n.setAttribute('aria-current', 'false');
+    });
+    document.title = 'Doron Tools | כלים לניתוח שוק ההון ולתכנון פיננסי';
   }
 
-  function openExternal() {
-    if (currentToolUrl) window.open(currentToolUrl, '_blank');
-  }
-
-  function reloadFrame() {
-    const iframe = document.getElementById('toolIframe');
-    if (iframe.src) iframe.src = iframe.src;
-  }
-
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('overlay').classList.toggle('open');
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') goHome();
+  $('backBtn').addEventListener('click', goHome);
+  $('externalBtn').addEventListener('click', function () {
+    if (currentUrl) openTab(currentUrl);
   });
+  $('reloadBtn').addEventListener('click', function () {
+    if (currentUrl) $('toolFrame').src = currentUrl;
+  });
+
+  /* Escape closes the dialog or the sidebar. It deliberately does NOT
+     leave an open tool, so in-progress work inside a tool is never lost. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (dialogOpen()) { closeDialog(); return; }
+    if ($('sidebar').classList.contains('open')) setSidebar(false);
+  });
+
+  /* Keep the drawer state sane across breakpoint changes */
+  window.matchMedia('(min-width: 1024px)').addEventListener('change', function (ev) {
+    if (ev.matches) {
+      $('sidebar').classList.remove('open');
+      $('scrim').classList.remove('open');
+      $('scrim').hidden = true;
+      $('navToggle').setAttribute('aria-expanded', 'false');
+    } else if ($('toolView').classList.contains('active')) {
+      goHome();
+    }
+  });
+
+  render();
+})();
 </script>
 
 </body>
