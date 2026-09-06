@@ -557,7 +557,6 @@
 
   <div class="sidebar-footer">
     <strong>דורון שרייבמן</strong>
-    <span id="sidebarMeta"></span>
   </div>
 </aside>
 
@@ -629,8 +628,6 @@
 <script>
 (function () {
   'use strict';
-
-  var SITE = { version: '2.0', updated: 'ספטמבר 2026' };
 
   var CATEGORIES = [
     { id: 'market',   label: 'שוק ההון ומסחר',        color: 'var(--accent-market)',   strong: 'var(--accent-market-strong)',   tint: 'var(--accent-market-tint)' },
@@ -811,9 +808,7 @@
     nav.innerHTML = navHtml;
     groups.innerHTML = groupsHtml;
 
-    var year = new Date().getFullYear();
-    $('homeMeta').textContent = 'Doron Tools · דורון שרייבמן · גרסה ' + SITE.version + ' · עודכן ' + SITE.updated + ' · © ' + year;
-    $('sidebarMeta').textContent = 'גרסה ' + SITE.version + ' · עודכן ' + SITE.updated;
+    $('homeMeta').textContent = 'Doron Tools · דורון שרייבמן · © ' + new Date().getFullYear();
 
     Array.prototype.forEach.call(document.querySelectorAll('[data-tool]'), function (el) {
       var t = toolOf(el.dataset.tool);
