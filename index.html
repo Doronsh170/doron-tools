@@ -21,8 +21,8 @@
 <meta name="twitter:title" content="Doron Tools | כלים לניתוח שוק ההון ולתכנון פיננסי">
 <meta name="twitter:description" content="מערכת כלים לניתוח שוק ההון, מעקב מסחר ותכנון פיננסי ופנסיוני.">
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='rgb(7,121,92)'/%3E%3Cstop offset='1' stop-color='rgb(45,111,186)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='43' font-family='Helvetica,Arial,sans-serif' font-size='29' font-weight='700' fill='%23fff' text-anchor='middle'%3EDS%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='rgb(7,121,92)'/%3E%3Ctext x='32' y='43' font-family='Helvetica,Arial,sans-serif' font-size='29' font-weight='700' fill='%23fff' text-anchor='middle'%3EDS%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='rgb(7,121,92)'/%3E%3Cstop offset='1' stop-color='rgb(45,111,186)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='43' font-family='Helvetica,Arial,sans-serif' font-size='29' font-weight='700' fill='%23fff' text-anchor='middle'%3EDT%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='rgb(7,121,92)'/%3E%3Ctext x='32' y='43' font-family='Helvetica,Arial,sans-serif' font-size='29' font-weight='700' fill='%23fff' text-anchor='middle'%3EDT%3C/text%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -408,6 +408,17 @@
 
   .tool-frame { flex: 1; width: 100%; border: none; background: #fff; min-height: 0; }
 
+  .frame-fallback {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 14px; padding: 32px;
+    background: var(--bg-surface);
+    color: var(--text-muted);
+    text-align: center;
+  }
+  .frame-fallback p { font-size: 14px; line-height: 1.7; max-width: 42ch; }
+
   /* ---------- Disclaimer dialog ---------- */
   .dialog-backdrop {
     position: fixed; inset: 0; z-index: 100;
@@ -532,7 +543,7 @@
     <svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg>
   </button>
   <div class="brand">
-    <span class="brand-mark" aria-hidden="true">DS</span>
+    <span class="brand-mark" aria-hidden="true">DT</span>
     <span class="brand-name">Doron Tools</span>
   </div>
 </header>
@@ -542,7 +553,7 @@
 <aside class="sidebar" id="sidebar" aria-label="ניווט ראשי">
   <div class="sidebar-header">
     <div class="brand">
-      <span class="brand-mark lg" aria-hidden="true">DS</span>
+      <span class="brand-mark lg" aria-hidden="true">DT</span>
       <span class="brand-stack">
         <span class="brand-name lg">Doron Tools</span>
         <span class="brand-tagline">שוק הון ותכנון פיננסי</span>
@@ -605,6 +616,14 @@
       allow="clipboard-write; fullscreen"
       sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-downloads allow-storage-access-by-user-activation"
       src="about:blank"></iframe>
+    <div class="frame-fallback" id="frameFallback" hidden>
+      <svg class="icon" aria-hidden="true"><use href="#i-external"></use></svg>
+      <p>הכלי לא נטען כאן. ייתכן שהוא אינו זמין כרגע, או שאינו מאפשר הצגה בתוך מסגרת.</p>
+      <button type="button" class="btn btn-primary" id="fallbackOpen">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-external"></use></svg>
+        <span>פתח בחלון חדש</span>
+      </button>
+    </div>
   </section>
 </main>
 
@@ -643,6 +662,10 @@
       cat: 'market',
       icon: 'i-momentum',
       url: 'https://wallstreet-view.netlify.app/',
+      // This host sends a framing restriction (X-Frame-Options /
+      // frame-ancestors), so an iframe renders the browser's error page.
+      // Nothing on this side can override it — open it in a new tab instead.
+      embed: false,
       disclaimer: {
         subtitle: 'יש לקרוא ולאשר לפני הכניסה ל־Momentum Desk',
         html:
@@ -798,7 +821,10 @@
                   '<span class="tool-card-title">' + t.name + '</span>' +
                 '</span>' +
                 '<span class="tool-card-desc">' + t.desc + '</span>' +
-                '<span class="tool-card-cta">פתיחת הכלי' + svgIcon('i-arrow', 'icon icon-sm') + '</span>' +
+                '<span class="tool-card-cta">' +
+                  (t.embed === false ? 'פתיחה בחלון חדש' + svgIcon('i-external', 'icon icon-sm')
+                                     : 'פתיחת הכלי' + svgIcon('i-arrow', 'icon icon-sm')) +
+                '</span>' +
               '</button>';
             }).join('') +
           '</div>' +
@@ -924,8 +950,12 @@
     return false;
   }
 
+  var frameTimer = null;
+
   function launch(tool) {
-    if (!isDesktop()) {
+    // Small screens, and tools whose host refuses to be framed, both open in a
+    // new tab rather than showing a broken frame inside the shell.
+    if (!isDesktop() || tool.embed === false) {
       openTab(tool.url);
       return;
     }
@@ -939,8 +969,20 @@
     $('toolBarIconUse').setAttribute('href', '#' + tool.icon);
     $('toolBarTitle').textContent = tool.name;
     $('toolFrame').title = tool.name;
-    $('toolFrame').src = tool.url;
     currentUrl = tool.url;
+
+    // A frame that never finishes loading (tool down, network blocked) would
+    // otherwise sit blank forever. Note this cannot detect a framing refusal:
+    // the browser fires load on its own error page. That is what embed:false is for.
+    var settled = false;
+    window.clearTimeout(frameTimer);
+    $('frameFallback').hidden = true;
+    $('toolFrame').hidden = false;
+    $('toolFrame').onload = function () { settled = true; };
+    $('toolFrame').src = tool.url;
+    frameTimer = window.setTimeout(function () {
+      if (!settled) { $('toolFrame').hidden = true; $('frameFallback').hidden = false; }
+    }, 8000);
 
     $('home').style.display = 'none';
     $('toolView').classList.add('active');
@@ -949,6 +991,9 @@
   }
 
   function goHome() {
+    window.clearTimeout(frameTimer);
+    $('frameFallback').hidden = true;
+    $('toolFrame').hidden = false;
     $('toolView').classList.remove('active');
     $('home').style.display = '';
     $('toolFrame').src = 'about:blank';
@@ -961,6 +1006,9 @@
 
   $('backBtn').addEventListener('click', goHome);
   $('externalBtn').addEventListener('click', function () {
+    if (currentUrl) openTab(currentUrl);
+  });
+  $('fallbackOpen').addEventListener('click', function () {
     if (currentUrl) openTab(currentUrl);
   });
   $('reloadBtn').addEventListener('click', function () {
