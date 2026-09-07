@@ -637,16 +637,17 @@
   var TOOLS = [
     {
       id: 'momentum-desk',
-      name: 'Momentum Desk',
+      name: 'WALL STREET VIEW',
       meta: 'מיפוי סקטורים',
       desc: 'מפת סקטורים ותתי־סקטורים למניות וול סטריט, לניתוח מומנטום.',
+      openMode: 'external',
       cat: 'market',
       icon: 'i-momentum',
       url: 'https://wallstreet-view.netlify.app/',
       disclaimer: {
-        subtitle: 'יש לקרוא ולאשר לפני הכניסה ל־Momentum Desk',
+        subtitle: 'יש לקרוא ולאשר לפני הכניסה ל־WALL STREET VIEW',
         html:
-          '<p><strong>מטרת הכלי:</strong> Momentum Desk נועד למיפוי מניות וול סטריט לפי סקטורים, תתי־סקטורים וקבוצות השוואה רלוונטיות למסחר מומנטום.</p>' +
+          '<p><strong>מטרת הכלי:</strong> WALL STREET VIEW נועד למיפוי מניות וול סטריט לפי סקטורים, תתי־סקטורים וקבוצות השוואה רלוונטיות למסחר מומנטום.</p>' +
           '<p><strong>אין ייעוץ השקעות:</strong> המידע באתר מוצג לצורכי מידע, למידה וסינון ראשוני בלבד. הוא אינו מהווה ייעוץ השקעות, שיווק השקעות, ניתוח השקעות אישי או המלצה לקנייה, מכירה או החזקה של ניירות ערך.</p>' +
           '<p><strong>דיוק וסיווגים:</strong> החלוקה לקבוצות, הסקטורים, התמות והקישורים החיצוניים מבוססים על עריכה ידנית ומקורות פומביים. ייתכנו טעויות, סיווגים לא מדויקים, קישורים שאינם פעילים, נתונים חסרים או מידע שאינו מעודכן.</p>' +
           '<p><strong>שימוש במסחר:</strong> הכלי אינו מחליף בדיקה עצמאית של גרף, מחזורי מסחר, נזילות, חדשות, דוחות, סיכונים ומצב שוק. אין להסתמך עליו כמקור יחיד לקבלת החלטות מסחר או השקעה.</p>' +
@@ -925,7 +926,9 @@
   }
 
   function launch(tool) {
-    if (!isDesktop()) {
+    // Some external tools block iframe embedding via browser security headers.
+    // Those tools are explicitly opened in a new tab on desktop as well.
+    if (tool.openMode === 'external' || !isDesktop()) {
       openTab(tool.url);
       return;
     }
