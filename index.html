@@ -357,14 +357,29 @@
   .tool-card:hover .tool-card-cta { color: var(--cat-strong); }
 
   .home-foot {
-    margin-top: 28px;
-    padding-top: 16px;
+    margin-top: 32px;
+    padding-top: 18px;
     border-top: 1px solid var(--border);
     font-size: 12px;
     color: var(--text-muted);
-    line-height: 1.7;
+    line-height: 1.75;
   }
-  .home-foot .legal { margin-bottom: 4px; }
+  .legal-block {
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+  .legal-title {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .home-foot .legal { margin: 0; }
 
   /* ---------- Tool view ---------- */
   .tool-view { display: none; flex: 1; flex-direction: column; min-height: 0; }
@@ -565,13 +580,16 @@
     <div class="home-inner">
       <header class="home-head">
         <h1>Doron Tools</h1>
-        <p>מערכת כלים לניתוח שוק ההון, מעקב מסחר ותכנון פיננסי ופנסיוני. בחירת כלי מציגה גילוי נאות ייעודי לפני הפתיחה.</p>
+        <p>מערכת כלים לניתוח שוק ההון, מעקב מסחר ותכנון פיננסי ופנסיוני.</p>
       </header>
 
       <div id="toolGroups"></div>
 
       <footer class="home-foot">
-        <p class="legal"><strong>גילוי נאות:</strong> דורון שרייבמן, בעל רישיון יועץ השקעות מטעם רשות ניירות ערך. המידע באתר כללי ואינו מהווה ייעוץ השקעות ואינו תחליף לייעוץ המתחשב בנתונים ובצרכים האישיים; ככל שלא צוין אחרת, לכותב אין עניין אישי בנושא הפרסום. אין לראות במידע המלצה לביצוע פעולה כלשהי בניירות ערך, במוצרי חיסכון או במוצרים פנסיוניים. ט.ל.ח.</p>
+        <div class="legal-block" role="note" aria-label="גילוי נאות">
+          <strong class="legal-title">גילוי נאות</strong>
+          <p class="legal">דורון שרייבמן, בעל רישיון יועץ השקעות מטעם רשות ניירות ערך. המידע באתר ובכלים הוא מידע כללי בלבד, אינו מהווה ייעוץ השקעות ואינו תחליף לייעוץ המתחשב בנתונים ובצרכים האישיים של אדם מסוים. ככל שלא צוין אחרת, לכותב אין עניין אישי בנושא הפרסום; אם קיים עניין אישי בפרסום מסוים, הוא יצוין במפורש באותו פרסום. אין לראות במידע המלצה לקנייה, מכירה או החזקה של ניירות ערך, או לביצוע פעולה במוצר פיננסי או פנסיוני. ט.ל.ח.</p>
+        </div>
         <p id="homeMeta"></p>
       </footer>
     </div>
@@ -693,9 +711,9 @@
     },
     {
       id: 'wallstreet-reviews',
-      name: 'סקירות וול סטריט',
+      name: 'סקירות שווקים | וול סטריט וישראל',
       meta: 'סקירות שוק',
-      desc: 'הכנה למסחר, עדכון ביניים, סיכום יומי וסיכום שבועי.',
+      desc: 'סקירות בוקר, הכנה למסחר וסיכומי שוק בוול סטריט ובישראל.',
       cat: 'market',
       icon: 'i-review',
       url: 'https://doronsh170.github.io/wallstreet-reviews-v2/',
@@ -920,12 +938,6 @@
     var tool = toolOf(id);
     if (!tool || !tool.url) return;
     setSidebar(false);
-
-    if (tool.disclaimer && !accepted(id)) {
-      pendingId = id;
-      openDialog(tool, function () { launch(tool); });
-      return;
-    }
     launch(tool);
   }
 
