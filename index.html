@@ -512,6 +512,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true" focusable="false">
   <symbol id="i-momentum" viewBox="0 0 24 24"><path d="M3 17.5l5.5-5.5 3.5 3.5 7-7"/><path d="M15 8.5h4v4"/><path d="M3 21h18"/></symbol>
   <symbol id="i-scanner" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.75"/><path d="M15.4 15.4L20.5 20.5"/><path d="M8.3 12.6V9.4M10.6 12.6V7.6M12.9 12.6v-2"/></symbol>
+  <symbol id="i-journal" viewBox="0 0 24 24"><path d="M9 3.5h6v2.8H9z"/><path d="M15 4.9h2.3a1.7 1.7 0 011.7 1.7v12.2a1.7 1.7 0 01-1.7 1.7H6.7A1.7 1.7 0 015 18.8V6.6a1.7 1.7 0 011.7-1.7H9"/><path d="M8.6 11.6h6.8M8.6 15.3h4.2"/></symbol>
   <symbol id="i-review" viewBox="0 0 24 24"><path d="M4 6.4A1.6 1.6 0 015.6 4.8h9.8A1.6 1.6 0 0117 6.4V17a2.2 2.2 0 002.2 2.2H6.2A2.2 2.2 0 014 17z"/><path d="M17 9h1.4A1.6 1.6 0 0120 10.6V17"/><path d="M7.2 8.6h6.6M7.2 12h6.6M7.2 15.4h4"/></symbol>
   <symbol id="i-savings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 6"/><path d="M12 12h8.5"/></symbol>
   <symbol id="i-calculator" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.2"/><path d="M8.3 7.2h7.4"/><path d="M9 11.6h.01M12 11.6h.01M15 11.6h.01M9 15.2h.01M12 15.2h.01M15 15.2h.01M9 18.4h.01M12 18.4h.01M15 18.4h.01"/></symbol>
@@ -570,7 +571,7 @@
       <div id="toolGroups"></div>
 
       <footer class="home-foot">
-        <p class="legal">אין באמור ייעוץ השקעות, שיווק השקעות, ייעוץ פנסיוני או ייעוץ מס, ואין בו המלצה לביצוע פעולה כלשהי בניירות ערך או במוצרי חיסכון. כל שימוש הוא באחריות המשתמש בלבד. ט.ל.ח.</p>
+        <p class="legal"><strong>גילוי נאות:</strong> דורון שרייבמן, בעל רישיון יועץ השקעות מטעם רשות ניירות ערך. המידע באתר כללי ואינו מהווה ייעוץ השקעות ואינו תחליף לייעוץ המתחשב בנתונים ובצרכים האישיים; ככל שלא צוין אחרת, לכותב אין עניין אישי בנושא הפרסום. אין לראות במידע המלצה לביצוע פעולה כלשהי בניירות ערך, במוצרי חיסכון או במוצרים פנסיוניים. ט.ל.ח.</p>
         <p id="homeMeta"></p>
       </footer>
     </div>
@@ -639,13 +640,14 @@
       name: 'WALL STREET VIEW',
       meta: 'מיפוי סקטורים',
       desc: 'מפת סקטורים ותתי־סקטורים למניות וול סטריט, לניתוח מומנטום.',
-      openMode: 'external',
+      openMode: 'same-tab',
       cat: 'market',
       icon: 'i-momentum',
       url: 'https://wallstreet-view.netlify.app/',
       disclaimer: {
         subtitle: 'יש לקרוא ולאשר לפני הכניסה ל־WALL STREET VIEW',
         html:
+          '<p><strong>גילוי נאות:</strong> דורון שרייבמן, בעל רישיון יועץ השקעות מטעם רשות ניירות ערך. המידע כללי ואינו מהווה ייעוץ השקעות ואינו תחליף לייעוץ המתחשב בנתונים ובצרכים האישיים; ככל שלא צוין אחרת, לכותב אין עניין אישי בנושא הפרסום.</p>' +
           '<p><strong>מטרת הכלי:</strong> WALL STREET VIEW נועד למיפוי מניות וול סטריט לפי סקטורים, תתי־סקטורים וקבוצות השוואה רלוונטיות למסחר מומנטום.</p>' +
           '<p><strong>אין ייעוץ השקעות:</strong> המידע באתר מוצג לצורכי מידע, למידה וסינון ראשוני בלבד. הוא אינו מהווה ייעוץ השקעות, שיווק השקעות, ניתוח השקעות אישי או המלצה לקנייה, מכירה או החזקה של ניירות ערך.</p>' +
           '<p><strong>דיוק וסיווגים:</strong> החלוקה לקבוצות, הסקטורים, התמות והקישורים החיצוניים מבוססים על עריכה ידנית ומקורות פומביים. ייתכנו טעויות, סיווגים לא מדויקים, קישורים שאינם פעילים, נתונים חסרים או מידע שאינו מעודכן.</p>' +
@@ -664,9 +666,29 @@
       disclaimer: {
         subtitle: 'יש לקרוא ולאשר לפני השימוש בסורק',
         html:
+          '<p><strong>גילוי נאות:</strong> דורון שרייבמן, בעל רישיון יועץ השקעות מטעם רשות ניירות ערך. המידע כללי ואינו מהווה ייעוץ השקעות ואינו תחליף לייעוץ המתחשב בנתונים ובצרכים האישיים; ככל שלא צוין אחרת, לכותב אין עניין אישי בנושא הפרסום.</p>' +
           '<p><strong>מקור הנתונים:</strong> הנתונים מבוססים על מקורות חיצוניים (Finnhub, Google) ועלולים להיות חלקיים, מאוחרים או לא מדויקים. הניתוח מופק באמצעות בינה מלאכותית (AI).</p>' +
           '<p><strong>אין ייעוץ השקעות:</strong> התוכן אינו מהווה ייעוץ, שיווק השקעות, או המלצה לקנייה או מכירה של ניירות ערך, כהגדרתם בחוק הסדרת העיסוק בייעוץ השקעות, התשנ"ה-1995.</p>' +
           '<p><strong>אחריות:</strong> כל החלטת השקעה היא באחריות המשתמש בלבד. אין להסתמך על תוכן זה כמקור יחיד לקבלת החלטות. ט.ל.ח.</p>'
+      }
+    },
+    {
+      id: 'tradesnap',
+      name: 'TradeSnap',
+      meta: 'יומן עסקאות',
+      desc: 'תיעוד ומעקב אישי אחר עסקאות, לסיכום וניתוח בדיעבד.',
+      cat: 'market',
+      icon: 'i-journal',
+      url: 'https://doronsh170.github.io/tradesnap/',
+      disclaimer: {
+        subtitle: 'יש לקרוא ולאשר לפני הכניסה ל־TradeSnap',
+        html:
+          '<p><strong>גילוי נאות:</strong> דורון שרייבמן, בעל רישיון יועץ השקעות מטעם רשות ניירות ערך. המידע כללי ואינו מהווה ייעוץ השקעות ואינו תחליף לייעוץ המתחשב בנתונים ובצרכים האישיים; ככל שלא צוין אחרת, לכותב אין עניין אישי בנושא הפרסום.</p>' +
+          '<p><strong>מטרת הכלי:</strong> TradeSnap נועד לתיעוד ומעקב אישי אחר עסקאות שהמשתמש מבצע, לצורכי סיכום, למידה וניתוח בדיעבד.</p>' +
+          '<p><strong>אין ייעוץ השקעות:</strong> הכלי אינו מייצר המלצות ואינו מהווה ייעוץ השקעות, שיווק השקעות או המלצה לקנייה, מכירה או החזקה של ניירות ערך.</p>' +
+          '<p><strong>אינו מסמך חשבונאי או מס:</strong> סיכומי רווח והפסד, אחוזי תשואה וכל חישוב אחר בכלי נועדו למעקב אישי בלבד. הם אינם מהווים דוח חשבונאי, אישור בנקאי או מסמך לצורכי דיווח לרשות המסים.</p>' +
+          '<p><strong>דיוק הנתונים:</strong> הנתונים מוזנים על ידי המשתמש. באחריותו לוודא את נכונותם ואת גיבויים.</p>' +
+          '<p><strong>אחריות:</strong> כל פעולה בניירות ערך היא באחריות המשתמש בלבד. ט.ל.ח.</p>'
       }
     },
     {
@@ -680,6 +702,7 @@
       disclaimer: {
         subtitle: 'יש לקרוא ולאשר לפני הכניסה לסקירות',
         html:
+          '<p><strong>גילוי נאות:</strong> דורון שרייבמן, בעל רישיון יועץ השקעות מטעם רשות ניירות ערך. המידע כללי ואינו מהווה ייעוץ השקעות ואינו תחליף לייעוץ המתחשב בנתונים ובצרכים האישיים; ככל שלא צוין אחרת, לכותב אין עניין אישי בנושא הפרסום.</p>' +
           '<p><strong>מקור התוכן:</strong> הסקירות באתר זה מופקות באופן אוטומטי באמצעות בינה מלאכותית (AI) על בסיס נתוני שוק פומביים. התוכן לא נכתב ולא נבדק על ידי אדם.</p>' +
           '<p><strong>אין ייעוץ השקעות:</strong> התוכן מוצג למטרות מידע בלבד ואינו מהווה ייעוץ, שיווק השקעות, או המלצה לקנייה או מכירה של ניירות ערך, כהגדרתם בחוק הסדרת העיסוק בייעוץ השקעות, התשנ"ה-1995.</p>' +
           '<p><strong>דיוק ואמינות:</strong> ייתכנו אי-דיוקים, השמטות או שגיאות בנתונים ובפרשנות. אין להסתמך על תוכן זה כמקור יחיד לקבלת החלטות.</p>' +
@@ -697,6 +720,7 @@
       disclaimer: {
         subtitle: 'יש לקרוא ולאשר לפני הכניסה למפת החיסכון',
         html:
+          '<p><strong>גילוי נאות:</strong> דורון שרייבמן, בעל רישיון יועץ השקעות מטעם רשות ניירות ערך. המידע כללי ואינו מהווה ייעוץ השקעות ואינו תחליף לייעוץ המתחשב בנתונים ובצרכים האישיים; ככל שלא צוין אחרת, לכותב אין עניין אישי בנושא הפרסום.</p>' +
           '<p><strong>מטרת הכלי:</strong> מפת החיסכון נועדה לרכז ולהמחיש חשיפות של מוצרי חיסכון פנסיוני ופיננסי על בסיס נתונים ציבוריים ונתונים שהמשתמש מזין ידנית.</p>' +
           '<p><strong>אין ייעוץ או המלצה:</strong> המידע המוצג אינו מהווה ייעוץ השקעות, שיווק השקעות, ייעוץ פנסיוני, ייעוץ מס או המלצה לביצוע פעולה כלשהי.</p>' +
           '<p><strong>מקור הנתונים:</strong> הנתונים מבוססים על קובצי מידע ציבוריים של רשות שוק ההון ומאגרי גמל נט, פנסיה נט וביטוח נט. ייתכנו פערי עדכון, שגיאות, אי דיוקים או נתונים חסרים.</p>' +
@@ -716,6 +740,7 @@
       disclaimer: {
         subtitle: 'יש לקרוא ולאשר לפני השימוש במחשבון',
         html:
+          '<p><strong>גילוי נאות:</strong> דורון שרייבמן, בעל רישיון יועץ השקעות מטעם רשות ניירות ערך. המידע כללי ואינו מהווה ייעוץ השקעות ואינו תחליף לייעוץ המתחשב בנתונים ובצרכים האישיים; ככל שלא צוין אחרת, לכותב אין עניין אישי בנושא הפרסום.</p>' +
           '<p>המחשבון נועד למטרות הדגמה וחינוך פיננסי בלבד. התוצאות המוצגות מתבססות על נתוני תשואה היסטוריים בלבד (1995-2024) ואינן מהוות תחזית, הבטחה או התחייבות לתשואה עתידית כלשהי. ביצועי עבר אינם ערובה לביצועים עתידיים.</p>' +
           '<p>החישובים אינם מביאים בחשבון את מצבו הפיננסי האישי של המשתמש, מטרות ההשקעה, אופק ההשקעה, רמת הסיכון המתאימה לו, חבות המס הרלוונטית, עלויות עסקה, או כל גורם אישי אחר.</p>' +
           '<p>אין לראות בתוצאות המחשבון משום ייעוץ השקעות, ייעוץ פנסיוני, ייעוץ מס או כל ייעוץ פיננסי אחר. השימוש במידע המוצג הינו באחריות המשתמש בלבד. לפני כל החלטת השקעה מומלץ להתייעץ עם יועץ השקעות מורשה בעל רישיון כדין. ט.ל.ח.</p>'
@@ -878,6 +903,18 @@
 
   /* ---------- Tool launch ---------- */
   var currentUrl = '';
+  var HOME_TITLE = 'Doron Tools | כלים לניתוח שוק ההון ולתכנון פיננסי';
+
+  function basePath() {
+    return window.location.pathname + window.location.search;
+  }
+
+  // Give Doron Tools its own history state. This makes the browser Back button
+  // return from an embedded tool to the hub instead of jumping to the site
+  // that happened to be visited before Doron Tools.
+  if (!history.state || (!history.state.doronHome && !history.state.doronTool)) {
+    history.replaceState({ doronHome: true }, '', basePath());
+  }
 
   function requestTool(id) {
     var tool = toolOf(id);
@@ -893,26 +930,16 @@
   }
 
   function openTab(url) {
-    // Note: passing 'noopener' in the feature string makes window.open return
-    // null unconditionally, which is indistinguishable from a blocked popup.
-    // Open without it, then sever the opener link manually.
     var w = window.open(url, '_blank');
     if (w) {
       try { w.opener = null; } catch (e) { /* cross-origin */ }
       return true;
     }
-    // Popup genuinely blocked — never leave the tap doing nothing.
-    window.location.href = url;
+    window.location.assign(url);
     return false;
   }
 
-  function launch(tool) {
-    // Some external tools block iframe embedding via browser security headers.
-    // Those tools are explicitly opened in a new tab on desktop as well.
-    if (tool.openMode === 'external' || !isDesktop()) {
-      openTab(tool.url);
-      return;
-    }
+  function showEmbeddedTool(tool) {
     var cat = catOf(tool.cat);
     applyCatVars($('toolView'), cat);
 
@@ -929,10 +956,40 @@
     $('home').style.display = 'none';
     $('toolView').classList.add('active');
     document.title = tool.name + ' | Doron Tools';
+  }
+
+  function launch(tool, fromHistory) {
+    // WALL STREET VIEW blocks iframe embedding. Keep the user's requested
+    // single-tab behavior by navigating in the current tab instead of opening
+    // a separate window. A normal browser Back returns to Doron Tools.
+    if (tool.openMode === 'same-tab') {
+      window.location.assign(tool.url);
+      return;
+    }
+
+    // On smaller screens use the current tab as well, avoiding popup/new-tab
+    // behavior and keeping navigation predictable.
+    if (!isDesktop()) {
+      window.location.assign(tool.url);
+      return;
+    }
+
+    var wasActive = $('toolView').classList.contains('active');
+    showEmbeddedTool(tool);
+
+    if (!fromHistory) {
+      var nextUrl = basePath() + '#tool=' + encodeURIComponent(tool.id);
+      if (wasActive && history.state && history.state.doronTool) {
+        history.replaceState({ doronTool: tool.id }, '', nextUrl);
+      } else {
+        history.pushState({ doronTool: tool.id }, '', nextUrl);
+      }
+    }
+
     $('backBtn').focus();
   }
 
-  function goHome() {
+  function showHome() {
     $('toolView').classList.remove('active');
     $('home').style.display = '';
     $('toolFrame').src = 'about:blank';
@@ -940,8 +997,29 @@
     Array.prototype.forEach.call(document.querySelectorAll('.nav-item'), function (n) {
       n.setAttribute('aria-current', 'false');
     });
-    document.title = 'Doron Tools | כלים לניתוח שוק ההון ולתכנון פיננסי';
+    document.title = HOME_TITLE;
   }
+
+  function goHome() {
+    if (history.state && history.state.doronTool) {
+      history.back();
+      return;
+    }
+    showHome();
+    history.replaceState({ doronHome: true }, '', basePath());
+  }
+
+  window.addEventListener('popstate', function (e) {
+    var state = e.state || {};
+    if (state.doronTool && isDesktop()) {
+      var tool = toolOf(state.doronTool);
+      if (tool && tool.openMode !== 'same-tab') {
+        showEmbeddedTool(tool);
+        return;
+      }
+    }
+    showHome();
+  });
 
   $('backBtn').addEventListener('click', goHome);
   $('externalBtn').addEventListener('click', function () {
@@ -967,11 +1045,20 @@
       $('scrim').hidden = true;
       $('navToggle').setAttribute('aria-expanded', 'false');
     } else if ($('toolView').classList.contains('active')) {
-      goHome();
+      showHome();
+      history.replaceState({ doronHome: true }, '', basePath());
     }
   });
 
   render();
+
+  // Restore an embedded tool after a page reload or browser Forward action.
+  if (history.state && history.state.doronTool && isDesktop()) {
+    var initialTool = toolOf(history.state.doronTool);
+    if (initialTool && initialTool.openMode !== 'same-tab') {
+      showEmbeddedTool(initialTool);
+    }
+  }
 })();
 </script>
 
