@@ -659,7 +659,13 @@
       desc: 'חיפוש וסינון קרנות נאמנות וקרנות סל לפי שם, מספר נייר ומאפייני השקעה.',
       cat: 'market',
       icon: 'i-scanner',
-      url: 'https://doronsh170.github.io/Fund-master-doron/'
+      url: 'https://doronsh170.github.io/Fund-master-doron/',
+      requireDisclaimer: true,
+      disclaimer: {
+        subtitle: 'יש לקרוא ולאשר לפני הכניסה למאתר הקרנות',
+        html: '<p><strong>הכלי מיועד ליועצי השקעות בלבד.</strong></p>' +
+          '<p>המידע המוצג בכלי אינו מהווה ייעוץ השקעות או המלצה לביצוע פעולה כלשהי.</p>'
+      }
     },
     {
       id: 'momentum-desk',
@@ -927,6 +933,11 @@
     var tool = toolOf(id);
     if (!tool || !tool.url) return;
     setSidebar(false);
+    if (tool.requireDisclaimer) {
+      pendingId = tool.id;
+      openDialog(tool, function () { launch(tool); });
+      return;
+    }
     launch(tool);
   }
 
