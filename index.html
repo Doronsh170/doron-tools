@@ -538,6 +538,11 @@
   .group-head { align-items: center; }
   @media(max-width:1100px) { .topic-index { grid-template-columns: repeat(2,minmax(0,1fr)); } }
   @media(max-width:520px) { .topic-index { grid-template-columns: 1fr 1fr; gap: 9px; } .topic-tile { padding: 12px; } .topic-tile-heading { font-size: 13px; } .topic-tile-sub { font-size: 12px; } .topic-tile-count { font-size: 11px; } }
+
+  .category-back { display: block; margin: 28px auto 12px; padding: 11px 22px; border: 1px solid var(--border-strong); border-radius: 10px; background: white; color: var(--text-primary); font: 700 14px Heebo,sans-serif; cursor: pointer; }
+  .category-back:hover { background: var(--bg-hover); }
+  .topic-tile { cursor: pointer; text-align: right; font-family: inherit; width: 100%; }
+  #topicIndex[hidden], #toolGroups[hidden], .category-back[hidden], .tool-group[hidden] { display: none !important; }
 </style>
 </head>
 <body>
@@ -602,7 +607,8 @@
       </header>
 
       <nav class="topic-index" id="topicIndex" aria-label="מעבר לתחומי ידע"></nav>
-      <div id="toolGroups"></div>
+      <div id="toolGroups" hidden></div>
+      <button type="button" class="category-back" id="categoryBack" hidden>חזרה לכל הקטגוריות</button>
 
       <footer class="home-foot">
         <div class="legal-block" role="note" aria-label="גילוי נאות">
@@ -838,10 +844,10 @@
       var items = TOOLS.filter(function (t) { return t.cat === cat.id; });
       if (!items.length) return;
 
-      topicsHtml += '<a class="topic-tile" href="#topic-' + cat.id + '" style="--cat-color:' + cat.color + ';--cat-tint:' + cat.tint + '">' +
+      topicsHtml += '<button type="button" class="topic-tile" data-category="' + cat.id + '" style="--cat-color:' + cat.color + ';--cat-tint:' + cat.tint + '">' +
         '<span class="topic-tile-heading">' + cat.label + '</span>' +
         '<span class="topic-tile-sub">' + cat.info + '</span>' +
-        '<span class="topic-tile-count">' + items.length + ' פריטים בתחום</span></a>';
+        '<span class="topic-tile-count">' + items.length + ' פריטים בתחום</span></button>';
 
       navHtml +=
         '<div class="nav-group" role="group" aria-label="' + cat.label + '" style="--cat-color:' + cat.color + ';--cat-tint:' + cat.tint + '">' +
@@ -883,6 +889,28 @@
     groups.innerHTML = groupsHtml;
 
     $('homeMeta').textContent = 'Doron Tools · דורון שרייבמן · © ' + new Date().getFullYear();
+
+    function selectCategory(id) {
+      var category = CATEGORIES.some(function (c) { return c.id === id; });
+      if (!category) return;
+      $('topicIndex').hidden = true;
+      $('toolGroups').hidden = false;
+      $('categoryBack').hidden = false;
+      Array.prototype.forEach.call(groups.querySelectorAll('.tool-group'), function (section) {
+        section.hidden = section.id !== 'topic-' + id;
+      });
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('[data-category]'), function (btn) {
+      btn.addEventListener('click', function () { selectCategory(btn.dataset.category); });
+    });
+    $('categoryBack').addEventListener('click', function () {
+      $('toolGroups').hidden = true;
+      $('categoryBack').hidden = true;
+      $('topicIndex').hidden = false;
+      Array.prototype.forEach.call(groups.querySelectorAll('.tool-group'), function (section) { section.hidden = false; });
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    });
 
     Array.prototype.forEach.call(document.querySelectorAll('[data-tool]'), function (el) {
       var t = toolOf(el.dataset.tool);
