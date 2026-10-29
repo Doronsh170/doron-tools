@@ -870,7 +870,7 @@
 
       navHtml +=
         '<div class="nav-group" role="group" aria-label="' + cat.label + '" style="--cat-color:' + cat.color + ';--cat-tint:' + cat.tint + '">' +
-          '<div class="nav-group-label"><span class="dot" style="background:' + cat.color + '"></span>' + cat.label + '<span class="topic-help" tabindex="0" role="note" aria-label="' + cat.info + '" title="' + cat.info + '">?</span></div>' +
+          '<div class="nav-group-label"><span class="dot" style="background:' + cat.color + '"></span>' + cat.label + '</div>' +
           items.map(function (t) {
             return '<button type="button" class="nav-item" data-tool="' + t.id + '">' +
               '<span class="nav-item-icon">' + svgIcon(t.icon, 'icon') + '</span>' +
@@ -885,7 +885,7 @@
       groupsHtml +=
         '<section id="topic-' + cat.id + '" class="tool-group" style="--cat-color:' + cat.color + ';--cat-strong:' + cat.strong + ';--cat-tint:' + cat.tint + '">' +
           '<div class="group-head">' +
-            '<h2><span class="dot" style="background:' + cat.color + '"></span>' + cat.label + '<span class="topic-help" tabindex="0" role="note" aria-label="' + cat.info + '" title="' + cat.info + '">?</span></h2>' +
+            '<h2><span class="dot" style="background:' + cat.color + '"></span>' + cat.label + '</h2>' +
             '<span class="group-count">' + items.length + ' פריטים</span>' +
           '</div>' +
           '<div class="tool-grid">' +
