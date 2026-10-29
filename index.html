@@ -520,6 +520,24 @@
     }
     .tool-card:hover { transform: none; }
   }
+
+  /* Knowledge library: topic navigation and contextual help */
+  .knowledge-eyebrow { font-size: 12px !important; font-weight: 700; letter-spacing: .04em; color: var(--accent-market) !important; margin-bottom: 6px; }
+  .home-head { padding: 12px 0 6px; }
+  .home-head h1 { font-size: clamp(26px,3vw,39px); letter-spacing: -.7px; }
+  .topic-index { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin: 20px 0 30px; }
+  .topic-tile { display: flex; flex-direction: column; gap: 9px; padding: 18px; border: 1px solid var(--border); border-top: 3px solid var(--cat-color); border-radius: 14px; background: #fff; text-decoration: none; box-shadow: var(--shadow-sm); transition: transform .15s, box-shadow .15s; }
+  .topic-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .topic-tile-heading { color: var(--text-primary); font-size: 16px; font-weight: 800; }
+  .topic-tile-sub { color: var(--text-secondary); font-size: 13px; line-height: 1.65; flex: 1; }
+  .topic-tile-count { color: var(--cat-color); font-size: 12px; font-weight: 700; }
+  .topic-help { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border-strong); color: var(--text-secondary); background: #fff; font: 700 12px Arial,sans-serif; cursor: help; position: relative; flex-shrink: 0; }
+  .topic-help:hover, .topic-help:focus-visible { background: var(--cat-tint); color: var(--cat-strong); }
+  .topic-help:hover::after, .topic-help:focus-visible::after { content: attr(aria-label); position: absolute; z-index: 25; top: calc(100% + 9px); right: 0; width: min(260px,70vw); padding: 10px 12px; background: #243247; color: #fff; border-radius: 9px; text-align: right; font: 400 13px/1.55 Heebo,sans-serif; box-shadow: var(--shadow-md); pointer-events: none; }
+  .tool-group { scroll-margin-top: 78px; }
+  .group-head { align-items: center; }
+  @media(max-width:1100px) { .topic-index { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+  @media(max-width:520px) { .topic-index { grid-template-columns: 1fr 1fr; gap: 9px; } .topic-tile { padding: 12px; } .topic-tile-heading { font-size: 13px; } .topic-tile-sub { font-size: 12px; } .topic-tile-count { font-size: 11px; } }
 </style>
 </head>
 <body>
@@ -578,10 +596,12 @@
   <div class="home" id="home">
     <div class="home-inner">
       <header class="home-head">
-        <h1>Doron Tools</h1>
-        <p>מערכת כלים לניתוח שוק ההון, מעקב מסחר והמחשת נתוני חיסכון. הכלים נועדו למידע ולהמחשה בלבד.</p>
+        <p class="knowledge-eyebrow">ספריית הידע של דורון שרייבמן</p>
+        <h1>ידע, מחקר וכלים לשוק ההון</h1>
+        <p>מקום אחד ללימוד ולחקירה עצמאית של שוק ההון. בחרו תחום ידע, הכירו את הכלים וגשו למחקרים ולהמחשות.</p>
       </header>
 
+      <nav class="topic-index" id="topicIndex" aria-label="מעבר לתחומי ידע"></nav>
       <div id="toolGroups"></div>
 
       <footer class="home-foot">
@@ -647,8 +667,10 @@
   'use strict';
 
   var CATEGORIES = [
-    { id: 'market',   label: 'שוק ההון ומסחר',        color: 'var(--accent-market)',   strong: 'var(--accent-market-strong)',   tint: 'var(--accent-market-tint)' },
-    { id: 'planning', label: 'מחשבונים וכלי המחשה', color: 'var(--accent-planning)', strong: 'var(--accent-planning-strong)', tint: 'var(--accent-planning-tint)' }
+    { id: 'discovery', label: 'איתור ומיפוי השקעות', info: 'מאגרי מידע וכלים ללימוד, סינון והשוואה של קרנות נאמנות, קרנות סל ומניות.', color: 'var(--accent-market)', strong: 'var(--accent-market-strong)', tint: 'var(--accent-market-tint)' },
+    { id: 'research', label: 'מחקר שוק וסנטימנט', info: 'מחקרים והמחשות של התנהגות השוק, סנטימנט, מגמות ומומנטום על בסיס נתונים.', color: '#7355a4', strong: '#63438f', tint: '#f1ecf8' },
+    { id: 'reviews', label: 'סקירות שווקים', info: 'סקירות ומידע ללמידה על ההתפתחויות בשוקי ההון בישראל ובוול סטריט.', color: '#a15b2b', strong: '#85471d', tint: '#fcf1e7' },
+    { id: 'planning', label: 'מחשבונים ותכנון פיננסי', info: 'כלי המחשה ללימוד ריבית דריבית, צבירה, חסכונות ומוצרים פנסיוניים.', color: 'var(--accent-planning)', strong: 'var(--accent-planning-strong)', tint: 'var(--accent-planning-tint)' }
   ];
 
   var TOOLS = [
@@ -657,7 +679,7 @@
       name: 'מאתר קרנות',
       meta: 'קרנות נאמנות וקרנות סל',
       desc: 'חיפוש וסינון קרנות נאמנות וקרנות סל לפי שם, מספר נייר ומאפייני השקעה.',
-      cat: 'market',
+      cat: 'discovery',
       icon: 'i-scanner',
       url: 'https://doronsh170.github.io/Fund-master-doron/',
       requireDisclaimer: true,
@@ -672,7 +694,7 @@
       name: 'US ETF Market Atlas',
       meta: 'מפת שוק קרנות הסל בארה״ב',
       desc: 'דשבורד לניתוח ענף קרנות הסל בארה״ב, קטגוריות ונתוני השוק.',
-      cat: 'market',
+      cat: 'discovery',
       icon: 'i-scanner',
       url: 'https://doronsh170.github.io/US-ETF/US_ETF_Market_Atlas.html',
       disclaimer: {
@@ -688,7 +710,7 @@
       name: 'סנטימנט השוק | פחד ותאוות בצע × S&P 500',
       meta: 'מחקר היסטורי של סנטימנט ותשואות',
       desc: 'בחינת התשואה הממוצעת של מדד S&P 500 לאחר חודש, 3 חודשים, 6 חודשים ושנה, בהתאם לרמת הפחד והתאווה ביום הבסיס.',
-      cat: 'market',
+      cat: 'research',
       icon: 'i-review',
       url: 'https://doronsh170.github.io/fear-greed-sp500/'
     },
@@ -698,7 +720,7 @@
       meta: 'מיפוי סקטורים',
       desc: 'מפת סקטורים ותתי־סקטורים למניות וול סטריט, לניתוח מומנטום.',
       openMode: 'same-tab',
-      cat: 'market',
+      cat: 'research',
       icon: 'i-momentum',
       url: 'https://wallstreet-view.netlify.app/',
       disclaimer: {
@@ -717,7 +739,7 @@
       name: 'סורק פונדמנטלי',
       meta: 'סריקת מניות ו־ETF',
       desc: 'סריקה וסינון של מניות ותעודות סל לפי נתונים פונדמנטליים.',
-      cat: 'market',
+      cat: 'discovery',
       icon: 'i-scanner',
       url: 'https://fundamental-pro.netlify.app/',
       disclaimer: {
@@ -734,7 +756,7 @@
       name: 'סקירות שווקים | וול סטריט וישראל',
       meta: 'סקירות שוק',
       desc: 'סקירות בוקר, הכנה למסחר וסיכומי שוק בוול סטריט ובישראל.',
-      cat: 'market',
+      cat: 'reviews',
       icon: 'i-review',
       url: 'https://doronsh170.github.io/wallstreet-reviews-v2/',
       disclaimer: {
@@ -810,14 +832,20 @@
     var groups = $('toolGroups');
     var navHtml = '';
     var groupsHtml = '';
+    var topicsHtml = '';
 
     CATEGORIES.forEach(function (cat) {
       var items = TOOLS.filter(function (t) { return t.cat === cat.id; });
       if (!items.length) return;
 
+      topicsHtml += '<a class="topic-tile" href="#topic-' + cat.id + '" style="--cat-color:' + cat.color + ';--cat-tint:' + cat.tint + '">' +
+        '<span class="topic-tile-heading">' + cat.label + '</span>' +
+        '<span class="topic-tile-sub">' + cat.info + '</span>' +
+        '<span class="topic-tile-count">' + items.length + ' פריטים בתחום</span></a>';
+
       navHtml +=
         '<div class="nav-group" role="group" aria-label="' + cat.label + '" style="--cat-color:' + cat.color + ';--cat-tint:' + cat.tint + '">' +
-          '<div class="nav-group-label" aria-hidden="true"><span class="dot" style="background:' + cat.color + '"></span>' + cat.label + '</div>' +
+          '<div class="nav-group-label"><span class="dot" style="background:' + cat.color + '"></span>' + cat.label + '<span class="topic-help" tabindex="0" role="note" aria-label="' + cat.info + '" title="' + cat.info + '">?</span></div>' +
           items.map(function (t) {
             return '<button type="button" class="nav-item" data-tool="' + t.id + '">' +
               '<span class="nav-item-icon">' + svgIcon(t.icon, 'icon') + '</span>' +
@@ -830,10 +858,10 @@
         '</div>';
 
       groupsHtml +=
-        '<section class="tool-group" style="--cat-color:' + cat.color + ';--cat-strong:' + cat.strong + ';--cat-tint:' + cat.tint + '">' +
+        '<section id="topic-' + cat.id + '" class="tool-group" style="--cat-color:' + cat.color + ';--cat-strong:' + cat.strong + ';--cat-tint:' + cat.tint + '">' +
           '<div class="group-head">' +
-            '<h2><span class="dot" style="background:' + cat.color + '"></span>' + cat.label + '</h2>' +
-            '<span class="group-count">' + items.length + ' כלים</span>' +
+            '<h2><span class="dot" style="background:' + cat.color + '"></span>' + cat.label + '<span class="topic-help" tabindex="0" role="note" aria-label="' + cat.info + '" title="' + cat.info + '">?</span></h2>' +
+            '<span class="group-count">' + items.length + ' פריטים</span>' +
           '</div>' +
           '<div class="tool-grid">' +
             items.map(function (t) {
@@ -850,6 +878,7 @@
         '</section>';
     });
 
+    $('topicIndex').innerHTML = topicsHtml;
     nav.innerHTML = navHtml;
     groups.innerHTML = groupsHtml;
 
