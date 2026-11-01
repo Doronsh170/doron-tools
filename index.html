@@ -776,16 +776,6 @@
       }
     },
     {
-      id: 'weekly-market-review',
-      name: 'סקירת שווקים שבועית',
-      meta: 'סקירות שבועיות והרחבות',
-      desc: 'ארכיון סקירות שבועיות ועמודי הרחבה על אירועים מרכזיים בשוקי ההון.',
-      cat: 'reviews',
-      icon: 'i-review',
-      url: 'https://doronsh170.github.io/weekly-market-review/',
-      openMode: 'same-tab'
-    },
-    {
       id: 'pension-stars',
       name: 'האם הקופות המובילות נשארות מובילות?',
       meta: 'מחקר תשואות ודירוגים לאורך זמן',
@@ -1125,7 +1115,7 @@
 
   window.addEventListener('popstate', function (e) {
     var state = e.state || {};
-    if (state.doronTool && (isDesktop() || state.doronTool === 'weekly-market-review')) {
+    if (state.doronTool && isDesktop()) {
       var tool = toolOf(state.doronTool);
       if (tool && tool.openMode !== 'same-tab') {
         showEmbeddedTool(tool);
@@ -1167,7 +1157,7 @@
   render();
 
   // Restore an embedded tool after a page reload or browser Forward action.
-  if (history.state && history.state.doronTool && (isDesktop() || history.state.doronTool === 'weekly-market-review')) {
+  if (history.state && history.state.doronTool && isDesktop()) {
     var initialTool = toolOf(history.state.doronTool);
     if (initialTool && initialTool.openMode !== 'same-tab') {
       showEmbeddedTool(initialTool);
